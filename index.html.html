@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="RRLogo.ico" type="image/x-icon">
+<title>HCW School Marks Schedule</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1a2744;--blue:#2563eb;--sky:#3b82f6;--light:#eff6ff;
+  --green:#16a34a;--red:#dc2626;--gray:#6b7280;--border:#e2e8f0;
+  --white:#fff;--text:#1e293b;
+}
+body{font-family:'Nunito',sans-serif;background:#f1f5f9;color:var(--text);min-height:100vh}
+
+/* ── LOGIN ── */
+#loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#1a2744 0%,#2563eb 100%)}
+.login-box{background:white;border-radius:20px;padding:44px 40px;width:360px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,0.3);text-align:center}
+.login-box .school-icon{font-size:52px;margin-bottom:8px}
+.login-box h2{font-size:22px;font-weight:800;color:var(--navy);margin-bottom:4px}
+.login-box p{color:var(--gray);font-size:14px;margin-bottom:28px}
+.login-box label{display:block;text-align:left;font-size:13px;font-weight:700;color:var(--navy);margin-bottom:5px}
+.login-box input{width:100%;padding:11px 14px;border:2px solid var(--border);border-radius:10px;font-size:15px;font-family:inherit;margin-bottom:16px;transition:.2s}
+.login-box input:focus{outline:none;border-color:var(--blue)}
+.login-btn{width:100%;padding:13px;background:var(--blue);color:white;border:none;border-radius:10px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;transition:.2s}
+.login-btn:hover{background:#1d4ed8}
+.login-error{color:var(--red);font-size:13px;margin-top:8px;display:none}
+
+/* ── APP SHELL ── */
+#app{display:none}
+header{background:var(--navy);color:white;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:62px;box-shadow:0 2px 10px rgba(0,0,0,0.2);position:sticky;top:0;z-index:100}
+header h1{font-size:18px;font-weight:800}
+.header-right{display:flex;align-items:center;gap:14px}
+.user-badge{background:rgba(255,255,255,0.15);border-radius:8px;padding:5px 12px;font-size:13px;font-weight:700}
+.logout-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);color:white;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;font-weight:600}
+.logout-btn:hover{background:rgba(255,255,255,0.2)}
+.main{padding:24px;max-width:1500px;margin:0 auto}
+
+/* ── TABS ── */
+.grade-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.grade-tab{padding:8px 18px;background:white;border:2px solid var(--border);border-radius:24px;cursor:pointer;font-size:13px;font-weight:700;font-family:inherit;color:var(--gray);transition:.2s}
+.grade-tab:hover{border-color:var(--sky);color:var(--sky)}
+.grade-tab.active{background:var(--blue);border-color:var(--blue);color:white}
+.grade-tab.sum-tab{border-color:#f59e0b;color:#b45309;background:#fff8f0}
+.grade-tab.sum-tab.active{background:#f59e0b;border-color:#f59e0b;color:white}
+
+/* ── MARKS CARD ── */
+.card{background:white;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.06);overflow:hidden}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:10px}
+.card-header h3{font-size:17px;font-weight:800;color:var(--navy)}
+.card-header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.card-meta{font-size:13px;color:var(--gray)}
+.summary-btn{background:#f59e0b;color:white;border:none;padding:8px 18px;border-radius:9px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit}
+.summary-btn:hover{background:#d97706}
+
+/* ── TABLE ── */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#f8fafc;color:var(--navy);font-weight:800;padding:10px;text-align:center;border-bottom:2px solid var(--border);white-space:nowrap;position:sticky;top:0;z-index:2}
+th:nth-child(1),th:nth-child(2),th:nth-child(3){text-align:left}
+td{padding:8px 10px;border-bottom:1px solid #f1f5f9;text-align:center;vertical-align:middle}
+td:nth-child(1),td:nth-child(2),td:nth-child(3){text-align:left}
+tr:hover td{background:#f8faff}
+tr.separator td{height:10px;background:#f8fafc;padding:0}
+td.editable{cursor:pointer}
+td.editable input{width:58px;padding:4px 6px;border:2px solid var(--blue);border-radius:6px;text-align:center;font-size:13px;font-family:inherit;font-weight:700}
+.score-val{display:inline-block;min-width:34px;padding:2px 6px;border-radius:6px;font-weight:700;cursor:pointer}
+.score-val:hover{background:var(--light)}
+.score-val.empty{color:#ccc}
+.score-a{color:#15803d;background:#dcfce7}
+.score-b{color:#1d4ed8;background:#dbeafe}
+.score-c{color:#d97706;background:#fef3c7}
+.score-f{color:#dc2626;background:#fee2e2}
+.total-cell{font-weight:800;color:var(--navy)}
+.avg-cell{font-weight:700;color:var(--blue)}
+.rank-cell{font-weight:800;color:var(--green)}
+
+/* ── SAVE BAR ── */
+.save-bar{position:fixed;bottom:24px;right:24px;z-index:200;display:flex;gap:10px;align-items:center}
+.save-btn{background:var(--green);color:white;border:none;padding:13px 24px;border-radius:14px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 4px 20px rgba(22,163,74,.4);transition:.2s;display:flex;align-items:center;gap:8px}
+.save-btn:hover{background:#15803d;transform:translateY(-1px)}
+.save-status{background:white;padding:10px 16px;border-radius:12px;font-size:13px;font-weight:700;box-shadow:0 2px 10px rgba(0,0,0,.1);display:none}
+.save-status.show{display:block}
+.save-status.ok{color:var(--green)}
+
+/* ── ADMIN ── */
+.admin-section{margin-top:28px}
+.admin-card-wrap{background:white;border-radius:16px;padding:24px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:18px}
+.admin-card-wrap h3{font-size:16px;font-weight:800;color:var(--navy);margin-bottom:6px}
+.admin-hint{font-size:13px;color:var(--gray);margin-bottom:18px}
+.user-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
+.user-card{border:2px solid var(--border);border-radius:12px;padding:14px 16px}
+.user-card.is-admin{border-color:#fbbf24;background:#fffbeb}
+.user-name{font-weight:800;font-size:14px;color:var(--navy)}
+.user-role{font-size:12px;color:var(--gray);margin:2px 0}
+.user-pass{font-size:12px;color:var(--blue);font-weight:700;font-family:monospace;background:#f0f9ff;padding:2px 6px;border-radius:4px;display:inline-block;margin-top:4px}
+/* Principal Admin Tabs */
+.admin-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
+.admin-tab-btn{padding:8px 16px;background:#f1f5f9;border:2px solid var(--border);border-radius:10px;cursor:pointer;font-size:13px;font-weight:700;font-family:inherit;color:var(--gray);transition:.2s}
+.admin-tab-btn:hover{border-color:var(--sky);color:var(--sky)}
+.admin-tab-btn.active{background:var(--navy);border-color:var(--navy);color:white}
+.admin-tab-pane{display:none}
+.admin-tab-pane.active{display:block}
+/* Edit fields inside user cards */
+.edit-field-row{display:flex;flex-direction:column;gap:3px;margin-top:8px}
+.edit-field-row label{font-size:11px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.4px}
+.edit-field-row input{padding:7px 10px;border:2px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;font-weight:600;width:100%;transition:.2s}
+.edit-field-row input:focus{outline:none;border-color:var(--blue)}
+.edit-field-row select{padding:7px 10px;border:2px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;font-weight:600;width:100%;transition:.2s;background:white}
+.edit-field-row select:focus{outline:none;border-color:var(--blue)}
+.admin-save-btn{margin-top:10px;background:var(--blue);color:white;border:none;padding:7px 16px;border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;width:100%;transition:.2s}
+.admin-save-btn:hover{background:#1d4ed8}
+.admin-del-btn{margin-top:5px;background:#fee2e2;color:var(--red);border:2px solid #fca5a5;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;width:100%;transition:.2s}
+.admin-del-btn:hover{background:var(--red);color:white}
+/* Student management */
+.student-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:12px}
+.student-table th{background:#f8fafc;color:var(--navy);font-weight:800;padding:8px 10px;text-align:left;border-bottom:2px solid var(--border)}
+.student-table td{padding:7px 10px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+.student-table tr:hover td{background:#f8faff}
+.student-table input{padding:5px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:inherit;font-weight:600;width:100%;transition:.2s}
+.student-table input:focus{outline:none;border-color:var(--blue)}
+.student-del-btn{background:#fee2e2;color:var(--red);border:none;padding:4px 10px;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer;font-family:inherit}
+.student-del-btn:hover{background:var(--red);color:white}
+.add-student-row{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;background:#f0fdf4;border-radius:10px;padding:12px;border:2px dashed #86efac;margin-top:8px}
+.add-student-row>div{display:flex;flex-direction:column;gap:3px;flex:1;min-width:80px}
+.add-student-row label{font-size:11px;font-weight:800;color:var(--green)}
+.add-student-row input{padding:7px 10px;border:2px solid #86efac;border-radius:8px;font-size:13px;font-family:inherit;font-weight:600;width:100%;background:white}
+.add-student-row input:focus{outline:none;border-color:var(--green)}
+.add-student-btn{background:var(--green);color:white;border:none;padding:8px 18px;border-radius:8px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;align-self:flex-end}
+.add-student-btn:hover{background:#15803d}
+.grade-select-wrap{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.grade-select-wrap label{font-weight:800;font-size:13px;color:var(--navy)}
+.grade-select-wrap select{padding:8px 14px;border:2px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;font-weight:700;background:white;cursor:pointer}
+.grade-select-wrap select:focus{outline:none;border-color:var(--blue)}
+/* Subjects editor */
+.subjects-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.subject-chip{display:inline-flex;align-items:center;gap:5px;background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:20px;padding:4px 10px 4px 12px;font-size:12px;font-weight:700;color:#1d4ed8}
+.subject-chip-del{background:none;border:none;cursor:pointer;color:#93c5fd;font-size:14px;line-height:1;font-weight:900;padding:0 2px}
+.subject-chip-del:hover{color:var(--red)}
+.add-subject-row{display:flex;gap:8px;margin-top:6px}
+.add-subject-row input{flex:1;padding:7px 12px;border:2px solid #bfdbfe;border-radius:8px;font-size:13px;font-family:inherit;font-weight:600}
+.add-subject-row input:focus{outline:none;border-color:var(--blue)}
+.add-subject-btn{background:var(--blue);color:white;border:none;padding:7px 16px;border-radius:8px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit}
+.add-subject-btn:hover{background:#1d4ed8}
+/* Grade management */
+.add-grade-row{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;background:#fff7ed;border-radius:10px;padding:12px;border:2px dashed #fdba74;margin-top:12px}
+.add-grade-row>div{display:flex;flex-direction:column;gap:3px;flex:1;min-width:120px}
+.add-grade-row label{font-size:11px;font-weight:800;color:#d97706}
+.add-grade-row input{padding:7px 10px;border:2px solid #fdba74;border-radius:8px;font-size:13px;font-family:inherit;font-weight:600;width:100%;background:white}
+.add-grade-row input:focus{outline:none;border-color:#f59e0b}
+.add-grade-btn{background:#f59e0b;color:white;border:none;padding:8px 18px;border-radius:8px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;align-self:flex-end}
+.add-grade-btn:hover{background:#d97706}
+.grade-del-btn{background:#fee2e2;color:var(--red);border:2px solid #fca5a5;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:6px}
+.grade-del-btn:hover{background:var(--red);color:white}
+.principal-banner{background:linear-gradient(135deg,#1a2744,#2563eb);border-radius:14px;padding:16px 22px;margin-bottom:18px;display:flex;align-items:center;gap:14px}
+.principal-banner .pb-icon{font-size:36px}
+.principal-banner h2{color:white;font-size:17px;font-weight:900;margin-bottom:2px}
+.principal-banner p{color:rgba(255,255,255,.7);font-size:12px}
+
+/* ── MINIMIZE / MAXIMIZE ── */
+.admin-panel-body{
+  overflow:hidden;
+  max-height:4000px;
+  transition:max-height .45s cubic-bezier(.4,0,.2,1), opacity .35s ease;
+  opacity:1;
+}
+.admin-panel-body.minimized{
+  max-height:0;
+  opacity:0;
+  pointer-events:none;
+}
+.admin-section.is-minimized .principal-banner{
+  border-radius:14px;
+  margin-bottom:0;
+}
+.minimize-btn{
+  background:rgba(255,255,255,.15);
+  border:1.5px solid rgba(255,255,255,.35);
+  color:white;
+  width:34px;height:34px;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:18px;
+  font-family:inherit;
+  font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+  transition:.2s;
+  flex-shrink:0;
+  line-height:1;
+}
+.minimize-btn:hover{background:rgba(255,255,255,.28);}
+.minimized-badge{
+  background:rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.3);
+  color:white;
+  border-radius:20px;
+  padding:3px 10px;
+  font-size:11px;
+  font-weight:800;
+  display:none;
+  letter-spacing:.3px;
+}
+.admin-section.is-minimized .minimized-badge{display:inline-block;}
+.admin-section.is-minimized .principal-banner p{display:none;}
+.flash-ok{background:#dcfce7;color:#15803d;border:1px solid #86efac;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:700;margin-bottom:10px;display:none}
+.flash-ok.show{display:block}
+.section-divider{display:flex;align-items:center;gap:10px;margin:14px 0}
+.section-divider span{font-size:12px;font-weight:800;color:var(--gray);white-space:nowrap}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ══════════════════════════════════
+   SUMMARY VIEW (screen)
+══════════════════════════════════ */
+#summaryView{display:none}
+.sum-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.sum-topbar h2{font-size:18px;font-weight:900;color:var(--navy)}
+.sum-actions{display:flex;gap:8px;flex-wrap:wrap}
+.print-btn{background:var(--green);color:white;border:none;padding:9px 20px;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px}
+.print-btn:hover{background:#15803d}
+.back-btn{background:var(--navy);color:white;border:none;padding:9px 20px;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit}
+.back-btn:hover{background:#243460}
+
+/* Summary card */
+.sum-card{background:white;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.06);overflow:hidden;margin-bottom:24px}
+.sum-title-bar{background:var(--navy);color:white;padding:14px 22px;display:flex;align-items:center;justify-content:space-between}
+.sum-title-bar h3{font-size:16px;font-weight:800}
+.sum-title-bar span{font-size:12px;opacity:.75}
+.sum-table-wrap{overflow-x:auto}
+.sum-table{width:100%;border-collapse:collapse;font-size:12px}
+.sum-table th{background:#1e3a6e;color:white;padding:9px 8px;text-align:center;font-weight:800;white-space:nowrap;border:1px solid #2d4f8a}
+.sum-table th:nth-child(1),.sum-table th:nth-child(2),.sum-table th:nth-child(3),.sum-table th:nth-child(4){text-align:left}
+.sum-table td{padding:7px 8px;border:1px solid #e2e8f0;text-align:center;vertical-align:middle}
+.sum-table td:nth-child(1),.sum-table td:nth-child(2),.sum-table td:nth-child(3),.sum-table td:nth-child(4){text-align:left}
+.sum-table tr:nth-child(even) td{background:#f8fafc}
+.sum-table tr.sep-row td{height:6px;background:#dde3ef;padding:0}
+.sum-table .stotal{font-weight:800;color:var(--navy)}
+.sum-table .savg{font-weight:700;color:var(--blue)}
+.sum-table .srank{font-weight:900}
+.sum-table .r1{color:#d97706}.sum-table .r2{color:#6b7280}.sum-table .r3{color:#92400e}
+
+/* Stats row */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;padding:16px 22px;background:#f8fafc;border-top:1px solid var(--border)}
+.stat-box{background:white;border-radius:10px;padding:10px 12px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.stat-num{font-size:22px;font-weight:900;color:var(--navy)}
+.stat-lbl{font-size:11px;color:var(--gray);margin-top:2px}
+
+/* ── SIGNATURE SECTION ── */
+.sig-section{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:36px;
+  padding:28px 28px 22px;border-top:2px solid var(--border);background:white;
+}
+.sig-box{display:flex;flex-direction:column;gap:4px}
+.sig-label{font-size:11px;font-weight:900;color:var(--navy);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px}
+.sig-name-input{
+  border:none;border-bottom:1.5px solid #333;width:100%;
+  padding:4px 0;font-size:13px;font-family:inherit;font-weight:700;
+  background:transparent;color:var(--text);outline:none;
+}
+.sig-name-input::placeholder{color:#bbb;font-weight:400;font-style:italic}
+.sig-space{border-bottom:1.5px solid #333;height:54px;width:100%;margin-top:10px;margin-bottom:2px}
+.sig-caption{font-size:10.5px;color:var(--gray);text-align:center;margin-top:3px;font-weight:600}
+.sig-date-row{display:flex;align-items:center;gap:7px;margin-top:12px}
+.sig-date-label{font-size:12px;font-weight:800;color:var(--gray);white-space:nowrap}
+.sig-date-input{
+  flex:1;border:none;border-bottom:1.5px dotted #555;
+  padding:3px 0;font-size:12px;font-family:inherit;
+  background:transparent;outline:none;color:var(--text);font-weight:600;
+  text-align:center;
+}
+
+/* ══════════════════════════════════
+   PRINT STYLES
+══════════════════════════════════ */
+.print-school-header{display:none}
+@media print{
+  body{background:white;font-size:11px}
+  header,.grade-tabs,.save-bar,.no-print{display:none!important}
+  #app{display:block!important}
+  #mainView{display:none!important}
+  #summaryView{display:block!important}
+  .sum-topbar{display:none!important}
+  .sum-card{border-radius:0;box-shadow:none;margin-bottom:0;page-break-after:always;break-after:page}
+  .sum-card:last-child{page-break-after:avoid;break-after:avoid}
+  .sum-title-bar{background:#1a2744!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sum-table th{background:#1e3a6e!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-size:9px;padding:5px 4px}
+  .sum-table td{padding:4px 4px;font-size:9px}
+  .sum-table tr:nth-child(even) td{background:#f8fafc!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sum-table tr.sep-row td{background:#dde3ef!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .stats-row{background:#f8fafc!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;padding:10px 16px}
+  .stat-box{box-shadow:none;border:1px solid #e2e8f0}
+  .sig-section{border-top:2px solid #333;page-break-inside:avoid}
+  .sig-name-input,.sig-date-input{border-bottom:1.5px solid #333!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .sig-space{border-bottom:1.5px solid #333!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .print-school-header{display:block!important}
+  .score-a{color:#15803d!important;background:#dcfce7!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .score-b{color:#1d4ed8!important;background:#dbeafe!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .score-c{color:#d97706!important;background:#fef3c7!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .score-f{color:#dc2626!important;background:#fee2e2!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+.print-school-header{text-align:center;padding:14px 0 10px;border-bottom:3px double #1a2744;margin-bottom:14px}
+.print-school-header h1{font-size:20px;font-weight:900;color:#1a2744;letter-spacing:.5px}
+.print-school-header p{font-size:12px;color:#6b7280;margin-top:3px}
+
+@media(max-width:600px){
+  .main{padding:14px}header{padding:0 14px}header h1{font-size:14px}
+  .sig-section{grid-template-columns:1fr;gap:22px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div><img src="SchLogo.png" style="max-width:80px;margin-bottom:8px" onerror="this.style.display='none'"></div>
+    <h2>School Marks System</h2>
+    <p>Log in to view and update student marks</p>
+    <label>Username</label>
+    <input type="text" id="usernameInput" placeholder="Enter username"/>
+    <label>Password</label>
+    <input type="password" id="passwordInput" placeholder="Enter password"/>
+    <button class="login-btn" onclick="doLogin()">Login →</button>
+    <div class="login-error" id="loginError">❌ Wrong username or password</div>
+  </div>
+</div>
+
+<!-- ── APP ── -->
+<div id="app">
+  <header>
+    <h1>🏫 B/WHC School Schedule</h1>
+    <div class="header-right">
+      <span class="user-badge" id="userBadge"></span>
+      <button class="logout-btn" onclick="doLogout()">Logout</button>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="grade-tabs" id="gradeTabs"></div>
+
+    <!-- Marks entry view -->
+    <div id="mainView">
+      <div id="gradeContent"></div>
+      <div id="adminPanel"></div>
+    </div>
+
+    <!-- Summary / Print view -->
+    <div id="summaryView">
+      <div class="print-school-header">
+        <h1><img src="SchLogo1.png"><br>B/WHC School — Student Results</h1>
+        <p id="printDateLine"></p>
+      </div>
+      <div class="sum-topbar no-print">
+        <h2>📊 Summary — Print Ready</h2>
+        <div class="sum-actions">
+          <button class="print-btn" onclick="window.print()">🖨️ Print This Summary</button>
+          <button class="back-btn" onclick="backToMarks()">← Back to Marks</button>
+        </div>
+      </div>
+      <div id="summaryContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SAVE BAR -->
+<div class="save-bar">
+  <div class="save-status" id="saveStatus"></div>
+  <button class="save-btn" id="saveBtn" onclick="saveData()" style="display:none">💾 Save Changes</button>
+</div>
+
+<script>
+// ════════════════════════════════════
+// USERS
+// ════════════════════════════════════
+const USERS=[
+  {username:"admin",       password:"Admin@2026",      role:"admin",   name:"Principal",              grades:"all"},
+  {username:"2ndadmin",    password:"Admin@3026",      role:"admin",   name:"Vice Principal",         grades:"all"},
+  {username:"3rdadmin",    password:"Admin@4026",      role:"admin",   name:"Deputy Principal",       grades:"all"},
+  {username:"sectionel1",  password:"sectionel@1407",  role:"teacher", name:"Sectionel Head 10-11",   grades:["Grade 11","Grade 10A","Grade 10B"]},
+  {username:"sectionel2",  password:"sectionel@2407",  role:"teacher", name:"Sectionel Head 06-09",   grades:["Grade 09A","Grade 09B","Grade 08B","Grade 08A","Grade 07A","Grade 07B"]},
+  {username:"teacher1",    password:"Grade11#",        role:"teacher", name:"Mrs. Pushparani",        grades:["Grade 11"]},
+  {username:"teacher2",    password:"Grade10A#",       role:"teacher", name:"Mr. Bernad",             grades:["Grade 10A"]},
+  {username:"teacher3",    password:"Grade10B#",       role:"teacher", name:"Mrs. Silmy",             grades:["Grade 10B"]},
+  {username:"teacher4",    password:"Grade09A#",       role:"teacher", name:"Mr. Rameshraja",         grades:["Grade 09A"]},
+  {username:"teacher5",    password:"Grade09B#",       role:"teacher", name:"Mrs. Subashini",         grades:["Grade 09B"]},
+  {username:"teacher6",    password:"Grade08A#",       role:"teacher", name:"Mr. Stanly",             grades:["Grade 08A"]},
+  {username:"teacher7",    password:"Grade08B#",       role:"teacher", name:"Mrs. Fasmila",           grades:["Grade 08B"]},
+  {username:"teacher8",    password:"Grade07A#",       role:"teacher", name:"Mrs. Hasriya",           grades:["Grade 07A"]},
+  {username:"teacher9",    password:"Grade07B#",       role:"teacher", name:"Mrs. Shobika",           grades:["Grade 07B"]},
+];
+
+// ════════════════════════════════════
+// GRADE DATA
+// ════════════════════════════════════
+const GRADES={
+  "Grade 11":{
+    subjects:["Religion","Tamil","English","Maths","Science","History","B1","B2","B3"],
+    students:[
+      {no:1,index:"6721",name:"S.Navalogeshwaran"},{no:2,index:"7266",name:"K.Sivakumar"},{no:3,index:"7269",name:"S.Birundhan"},
+      {no:4,index:"7271",name:"S.Navaneethan"},{no:5,index:"7273",name:"S.Dhanushan"},{no:6,index:"7274",name:"D.Kavin"},
+      {no:7,index:"7275",name:"M.Varushanth"},{no:8,index:"7276",name:"G.Kowsik"},{no:9,index:"7277",name:"G.Kavi Prashnath"},
+      {no:10,index:"7278",name:"S.Nivedharshan"},{no:11,index:"7283",name:"J.Rahul"},{no:12,index:"7286",name:"C.Sasindran"},
+      {no:13,index:"7449",name:"K.Dharshan"},{no:14,index:"7504",name:"Y.Pravenn Kumar"},{no:15,index:"7661",name:"A.Lathishan"},
+      {no:16,index:"7814",name:"M.Kaviraj"},{no:17,index:"7871",name:"P.Pradheeshanan"},null,
+      {no:18,index:"7288",name:"Y.Yogadharshini"},{no:19,index:"7290",name:"S.Saranya"},{no:20,index:"7292",name:"P.Pilomina"},
+      {no:21,index:"7293",name:"S.Thirushalani"},{no:22,index:"7294",name:"U.Ureshini"},{no:23,index:"7296",name:"V.Merry Morina"},
+      {no:24,index:"7298",name:"T.Kokila Dharshini"},{no:25,index:"7587",name:"P.Rashika"},{no:26,index:"7824",name:"A.J.Orisha Venoshiya"}
+    ]
+  },
+  "Grade 10A":{
+    subjects:["Religion","Tamil","English","Maths","Science","History","B1","B2","B3"],
+    students:[
+      {no:1,index:"7333",name:"D.Dhanushkumar"},{no:2,index:"7342",name:"R.Krishanthan"},{no:3,index:"7346",name:"S.Dimukshan"},
+      {no:4,index:"7347",name:"I.Kavishan"},{no:5,index:"7348",name:"V.Keerthikashan"},{no:6,index:"7349",name:"U.Rukshan"},
+      {no:7,index:"7350",name:"G.Dhanuskan"},{no:8,index:"7353",name:"B.Dilooshan"},{no:9,index:"7355A",name:"Bavanrithish"},
+      {no:10,index:"7356",name:"T.Ugeshnath"},{no:11,index:"7867",name:"S.Krithish"},null,
+      {no:12,index:"7387",name:"M.Kavibrundha"},{no:13,index:"7368",name:"J.Savikshan"},{no:14,index:"7369",name:"R.Vidhusha"},
+      {no:15,index:"7370",name:"M.Yogalakshitha"},{no:16,index:"7371",name:"S.Kesha"},{no:17,index:"7372",name:"S.Nidusha"},
+      {no:18,index:"7374",name:"S.Umesha"},{no:19,index:"7375",name:"S.Banuja"},{no:20,index:"7376",name:"V.Uganthi"},
+      {no:21,index:"7704",name:"Y.Vinoja"},{no:22,index:"7764",name:"G.Rakshan"}
+    ]
+  },
+  "Grade 10B":{
+    subjects:["Religion","Tamil","English","Maths","Science","History","B1","B2","B3"],
+    students:[
+      {no:1,index:"7270",name:"K.Dilukshan"},{no:2,index:"7279",name:"S.Kugan"},{no:3,index:"7329",name:"S.Harishan"},
+      {no:4,index:"7330",name:"K.Aproshan"},{no:5,index:"7338",name:"P.Alihisam"},{no:6,index:"7340",name:"S.Harish"},
+      {no:7,index:"7344",name:"S.Ruwinth"},{no:8,index:"7354",name:"S.Badhunishan"},{no:9,index:"7355B",name:"V.Thirushan"},
+      {no:10,index:"7457",name:"J.Navatheepakan"},{no:11,index:"7758A",name:"T.Yadhumithan"},null,
+      {no:12,index:"7357",name:"G.Kavisha"},{no:13,index:"7358",name:"P.Pramitha"},{no:14,index:"7360",name:"T.Milkanyomi"},
+      {no:15,index:"7361",name:"S.Midusha"},{no:16,index:"7362",name:"M.Ramyarubini"},{no:17,index:"7363",name:"S.Harshani Puganya"},
+      {no:18,index:"7364",name:"R.Keerthana"},{no:19,index:"7365",name:"T.Tharanika"},{no:20,index:"7367",name:"R.Salomi"},
+      {no:21,index:"7444",name:"L.K.Nadheesha"}
+    ]
+  },
+  "Grade 09A":{
+    subjects:["Religion","Tamil","Maths","Science","English","History","Civics","AR/DA/MU","PTS","Shinhala","ICT","Helth.S","Geography"],
+    students:[
+      {no:1,index:"7281",name:"R.Kavin"},{no:2,index:"7285",name:"S.Dhanushkanth"},{no:3,index:"7345",name:"J.Dilshan"},
+      {no:4,index:"7402",name:"R.Rishagaran Rizwinth"},{no:5,index:"7406",name:"I.Pradap"},{no:6,index:"7417",name:"T.Nirushan"},
+      {no:7,index:"7429",name:"K.Kajith"},{no:8,index:"7808",name:"R.Greeshregan"},{no:9,index:"7865",name:"P.Rishikashanan"},null,
+      {no:10,index:"7297",name:"K.Nabinaya"},{no:12,index:"7377",name:"R.Rajeshwary"},{no:13,index:"7401",name:"N.Kabilakshi"},
+      {no:14,index:"7404",name:"T.Rakshitha"},{no:15,index:"7408",name:"V.Bavana"},{no:16,index:"7410A",name:"P.Dhanushka"},
+      {no:17,index:"7414",name:"S.Vinushka"},{no:18,index:"7418",name:"J.Vishmitha"},{no:19,index:"7421",name:"S.Uwiksha"},
+      {no:20,index:"7426",name:"N.Avineshika"},{no:21,index:"7431",name:"S.Puwani"},{no:22,index:"7436",name:"S.Diloshana"},
+      {no:23,index:"7442",name:"S.Anushika"},{no:24,index:"7508",name:"S.Pavishalini"}
+    ]
+  },
+  "Grade 09B":{
+    subjects:["Religion","Tamil","Maths","Science","English","History","Civics","AR/DA/MU","PTS","Shinhala","ICT","Helth.S","Geography"],
+    students:[
+      {no:1,index:"7252",name:"K.Nirooshan"},{no:2,index:"7282",name:"S.Sarama"},{no:3,index:"7334",name:"R.Ragawan"},
+      {no:4,index:"7335",name:"G.Rithish"},{no:5,index:"7336",name:"M.Siyan"},{no:6,index:"7337",name:"R.Siththarth"},
+      {no:7,index:"7405",name:"K.Kavinash"},{no:8,index:"7410B",name:"R.Sadhurshan"},{no:9,index:"7411",name:"P.Tiroshan"},
+      {no:10,index:"7415",name:"G.Praveen"},{no:11,index:"7420",name:"T.Kraneeth"},{no:12,index:"7428",name:"V.Sivadharshan"},
+      {no:13,index:"7437",name:"M.Srigaran"},{no:14,index:"7501",name:"R.Prasanth"},{no:15,index:"7525",name:"S.Nanthanu Sugeerth"},
+      {no:16,index:"7532",name:"J.Yesuanath"},null,
+      {no:17,index:"7403",name:"M.Keshalini"},{no:18,index:"7407",name:"S.Nidushka"},{no:19,index:"7409",name:"N.Abikal"},
+      {no:20,index:"7413",name:"V.Dhushmitha"},{no:21,index:"7416",name:"S.Kanishrala"},{no:22,index:"7419",name:"M.Thasvika"},
+      {no:23,index:"7427",name:"P.Sadhursika"},{no:24,index:"7435",name:"Y.Niruksha"},{no:25,index:"7438",name:"C.Piyumi"},
+      {no:26,index:"7453",name:"K.Vishmitha"},{no:27,index:"7798",name:"S.Varshini"}
+    ]
+  },
+  "Grade 08A":{
+    subjects:["Religion","Tamil","Maths","Science","English","History","Civics","AR/DA/MU","PTS","Shinhala","ICT","Helth.S","Geography"],
+    students:[
+      {no:1,index:"7462",name:"P.Silvestar"},{no:2,index:"7463",name:"T.Kausik"},{no:3,index:"7465",name:"M.Kavinkishan"},
+      {no:4,index:"7466",name:"T.Thawshik"},{no:5,index:"7471",name:"R.Rajeswaran"},{no:6,index:"7472",name:"S.Kumareshan"},
+      {no:7,index:"7474",name:"S.Jasvin"},{no:8,index:"7476",name:"U.Hakshan"},{no:9,index:"7478",name:"M.Dilrukshan"},
+      {no:10,index:"7500",name:"J.Dilukshan"},{no:11,index:"7422",name:"K.Udayakumar"},{no:12,index:"7424",name:"S.Srikanthan"},
+      {no:13,index:"07A13",name:"S.Linoshan"},null,
+      {no:14,index:"7479",name:"K.Rukshika"},{no:15,index:"7480",name:"R.Shalani"},{no:16,index:"7483",name:"S.Jeganandana"},
+      {no:17,index:"7485",name:"S.Keerthikashini"},{no:18,index:"7489A",name:"R.Kausalya"},{no:19,index:"7492A",name:"A.Sheronruwa"},
+      {no:20,index:"7496",name:"T.Deywitha"},{no:21,index:"7497",name:"S.Dhanushika"},{no:22,index:"7499",name:"S.Jesmina"},
+      {no:23,index:"7638",name:"S.Nethra Anne"},{no:24,index:"7655",name:"K.Thishnika"}
+    ]
+  },
+  "Grade 08B":{
+    subjects:["Religion","Tamil","Maths","Science","English","History","Civics","AR/DA/MU","PTS","Shinhala","ICT","Helth.S","Geography"],
+    students:[
+      {no:1,index:"7331",name:"R.Kavithas"},{no:2,index:"7464",name:"G.Dharvin"},{no:3,index:"7467",name:"Y.Vinukshan"},
+      {no:4,index:"7468",name:"M.Larushan"},{no:5,index:"7469",name:"P.Thirishan"},{no:6,index:"7470",name:"M.V.Kavisha Jaymal"},
+      {no:7,index:"7475",name:"V.Aravindh"},{no:8,index:"7477",name:"M.Nandana Rukshan"},{no:9,index:"7817",name:"D.Mekarn Rukshan"},null,
+      {no:10,index:"7632",name:"Y.Sadhurshika"},{no:11,index:"7881",name:"K.Sanya"},{no:12,index:"7487",name:"S.Nishmitha"},
+      {no:13,index:"7486",name:"M.Yashini"},{no:14,index:"7488",name:"S.Harshika"},{no:15,index:"7489B",name:"V.Vinushika"},
+      {no:16,index:"7490",name:"C.Saswitha"},{no:17,index:"7491",name:"R.Nilukshani"},{no:18,index:"7492B",name:"S.Suwasthika"},
+      {no:19,index:"7493",name:"K.Madhushika"},{no:20,index:"7495",name:"M.Pavisha"},{no:21,index:"7698",name:"R.Sayadhini"},
+      {no:22,index:"7588",name:"Y.Kavilsha"},{no:23,index:"7494",name:"Y.Hansika"}
+    ]
+  },
+  "Grade 07A":{
+    subjects:["Religion","Tamil","Maths","Science","English","History","Civics","AR/DA/MU","PTS","Shinhala","ICT","Helth.S","Geography"],
+    students:[
+      {no:1,index:"6724",name:"S.Sivaneshwaran"},{no:2,index:"7533",name:"N.Kowshik"},{no:3,index:"7535",name:"S.Gowtham"},
+      {no:4,index:"7537",name:"K.Tharun"},{no:5,index:"7538",name:"T.Lidhurshan"},{no:6,index:"7539",name:"R.Yabesh"},
+      {no:7,index:"7540",name:"T.Thatshahan"},{no:8,index:"7541",name:"I.Yadhurshan"},{no:9,index:"7563",name:"M.Ladurshan"},
+      {no:10,index:"7567",name:"S.Hariprasath"},{no:11,index:"7571",name:"J.Sanheep"},{no:12,index:"7574",name:"R.Lithesh"},
+      {no:13,index:"7822",name:"S.Kavithas"},{no:14,index:"7565",name:"D.Luginthan"},{no:15,index:"7862",name:"P.Mathe Yukshan"},null,
+      {no:16,index:"7546",name:"(Girl 16)"},{no:17,index:"7550",name:"(Girl 17)"},{no:18,index:"7553",name:"(Girl 18)"},
+      {no:19,index:"7556",name:"(Girl 19)"},{no:20,index:"7557",name:"(Girl 20)"},{no:21,index:"7577",name:"(Girl 21)"},
+      {no:22,index:"7578",name:"(Girl 22)"},{no:23,index:"7580",name:"(Girl 23)"},{no:24,index:"7581",name:"(Girl 24)"},
+      {no:25,index:"7582",name:"(Girl 25)"},{no:26,index:"7583",name:"(Girl 26)"},{no:27,index:"7584",name:"(Girl 27)"},
+      {no:28,index:"7589",name:"(Girl 28)"},{no:29,index:"7758B",name:"(Girl 29)"},{no:30,index:"7559",name:"(Girl 30)"}
+    ]
+  },
+  "Grade 07B":{
+    subjects:["Religion","Tamil","Maths","Science","English","History","Civics","AR/DA/MU","PTS","Shinhala","ICT","Helth.S","Geography"],
+    students:[
+      {no:1,index:"6722",name:"S.Sridharan"},{no:2,index:"7534",name:"S.Pavin"},{no:3,index:"7536",name:"P.Shahilan"},
+      {no:4,index:"7542",name:"S.Praneeth"},{no:5,index:"7564",name:"M.Divyes"},{no:6,index:"7566",name:"S.Nilukshan"},
+      {no:7,index:"7569",name:"S.Kabishan"},{no:8,index:"7570",name:"S.Dilukshan"},{no:9,index:"7573",name:"M.Yakshith"},
+      {no:10,index:"7575",name:"T.Ruwan"},{no:11,index:"7576",name:"R.Harshan"},{no:12,index:"7641",name:"S.Sivanjeevan"},null,
+      {no:13,index:"6723",name:"S.Sivarani"},{no:14,index:"7547",name:"S.Keshavi"},{no:15,index:"7551",name:"J.Keshini"},
+      {no:16,index:"7552",name:"P.Sinasika"},{no:17,index:"7554",name:"P.Anjani"},{no:18,index:"7555",name:"P.Abinesha"},
+      {no:19,index:"7558",name:"V.Abinsha"},{no:20,index:"7560",name:"V.Thusani"},{no:21,index:"7561",name:"U.Kirubhasini"},
+      {no:22,index:"7562",name:"S.Dhanushalini"},{no:23,index:"7585",name:"I.Sanjeevani"},{no:24,index:"7586",name:"S.Kabila"},
+      {no:25,index:"7766",name:"P.Rismitha"}
+    ]
+  }
+};
+
+// ════════════════════════════════════
+// STATE & STORAGE
+// ════════════════════════════════════
+let currentUser=null,currentGrade=null,marksData={},hasUnsaved=false;
+
+function skey(g,i,s){return`marks_${g}_${i}_${s}`}
+function loadMarks(grade){
+  const g=GRADES[grade];
+  if(!marksData[grade])marksData[grade]={};
+  g.students.forEach(s=>{
+    if(!s)return;
+    if(!marksData[grade][s.index])marksData[grade][s.index]={};
+    g.subjects.forEach(sub=>{
+      const v=localStorage.getItem(skey(grade,s.index,sub));
+      marksData[grade][s.index][sub]=v!==null?v:'';
+    });
+  });
+}
+function saveData(){
+  Object.keys(marksData).forEach(grade=>Object.keys(marksData[grade]).forEach(idx=>Object.keys(marksData[grade][idx]).forEach(sub=>{
+    localStorage.setItem(skey(grade,idx,sub),marksData[grade][idx][sub]);
+  })));
+  hasUnsaved=false;
+  document.getElementById('saveBtn').style.display='none';
+  showStatus('✅ Saved!','ok');
+}
+function showStatus(msg,type){
+  const el=document.getElementById('saveStatus');
+  el.textContent=msg;el.className='save-status show '+type;
+  setTimeout(()=>el.className='save-status',2500);
+}
+
+// ════════════════════════════════════
+// AUTH
+// ════════════════════════════════════
+function doLogin(){
+  const u=document.getElementById('usernameInput').value.trim();
+  const p=document.getElementById('passwordInput').value;
+  const user=USERS.find(x=>x.username===u&&x.password===p);
+  if(!user){document.getElementById('loginError').style.display='block';return;}
+  currentUser=user;
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('userBadge').textContent='👤 '+user.name;
+  initApp();
+}
+document.getElementById('passwordInput').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
+document.getElementById('usernameInput').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('passwordInput').focus()});
+function doLogout(){
+  if(hasUnsaved&&!confirm('Unsaved changes. Logout?'))return;
+  currentUser=null;
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('app').style.display='none';
+  document.getElementById('usernameInput').value='';
+  document.getElementById('passwordInput').value='';
+  document.getElementById('loginError').style.display='none';
+}
+function canAccess(grade){
+  if(!currentUser)return false;
+  return currentUser.grades==='all'||currentUser.grades.includes(grade);
+}
+
+// ════════════════════════════════════
+// INIT
+// ════════════════════════════════════
+function initApp(){
+  Object.keys(GRADES).forEach(g=>loadMarks(g));
+  renderGradeTabs();
+  if(currentUser.role==='admin')renderAdminPanel();
+  else document.getElementById('adminPanel').innerHTML='';
+}
+
+// ════════════════════════════════════
+// MARKS VIEW
+// ════════════════════════════════════
+function showGrade(grade){
+  currentGrade=grade;
+  document.querySelectorAll('.grade-tab').forEach(t=>t.classList.toggle('active',t.textContent===grade));
+  document.getElementById('mainView').style.display='block';
+  document.getElementById('summaryView').style.display='none';
+  renderTable(grade);
+}
+function backToMarks(){
+  document.getElementById('mainView').style.display='block';
+  document.getElementById('summaryView').style.display='none';
+  if(currentGrade)showGrade(currentGrade);
+}
+
+function esc(s){return String(s).replace(/'/g,"\\'")}
+function getScoreClass(v){
+  const n=parseFloat(v);
+  if(isNaN(n)||v==='')return'';
+  if(n>=75)return'score-a';if(n>=55)return'score-b';if(n>=35)return'score-c';return'score-f';
+}
+
+function renderTable(grade){
+  const g=GRADES[grade];const editable=canAccess(grade);
+  const count=g.students.filter(Boolean).length;
+  let html=`<div class="card">
+    <div class="card-header">
+      <h3>📋 ${grade}</h3>
+      <div class="card-header-right">
+        <span class="card-meta">${count} students · ${g.subjects.length} subjects${editable?' · ✏️ Editable':''}</span>
+        <button class="summary-btn" onclick="showSummary('${esc(grade)}')">📊 Summary & Print</button>
+      </div>
+    </div>
+    <div class="table-wrap"><table><thead><tr><th>No.</th><th>Index</th><th>Name</th>`;
+  g.subjects.forEach(s=>html+=`<th>${s}</th>`);
+  html+=`<th>Total</th><th>Avg</th><th>Rank</th></tr></thead><tbody>`;
+  g.students.forEach(s=>{
+    if(!s){html+=`<tr class="separator"><td colspan="${3+g.subjects.length+3}"></td></tr>`;return;}
+    const marks=marksData[grade]?.[s.index]||{};
+    let total=0,cnt=0;
+    g.subjects.forEach(sub=>{const v=parseFloat(marks[sub]);if(!isNaN(v)){total+=v;cnt++;}});
+    const avg=cnt>0?(total/cnt).toFixed(1):'';
+    html+=`<tr><td>${s.no}</td><td>${s.index}</td><td><strong>${s.name}</strong></td>`;
+    g.subjects.forEach(sub=>{
+      const v=marks[sub]||'';const sc=getScoreClass(v);
+      if(editable){
+        html+=`<td class="editable" onclick="editCell(this,'${esc(grade)}','${esc(s.index)}','${esc(sub)}')"><span class="score-val ${sc}${!v?' empty':''}">${v||'—'}</span></td>`;
+      }else{
+        html+=`<td><span class="score-val ${sc}${!v?' empty':''}">${v||'—'}</span></td>`;
+      }
+    });
+    html+=`<td class="total-cell">${total>0?total:'—'}</td><td class="avg-cell">${avg||'—'}</td><td class="rank-cell" id="rk_${grade.replace(/\s/g,'_')}_${s.index}">—</td></tr>`;
+  });
+  html+=`</tbody></table></div></div>`;
+  document.getElementById('gradeContent').innerHTML=html;
+  computeRanks(grade);
+}
+
+function editCell(td,grade,idx,subject){
+  if(td.querySelector('input'))return;
+  const cur=marksData[grade]?.[idx]?.[subject]||'';
+  td.innerHTML=`<input type="number" min="0" max="100" value="${cur}" onblur="commitCell(this,'${esc(grade)}','${esc(idx)}','${esc(subject)}')" onkeydown="cellKey(event,this,'${esc(grade)}','${esc(idx)}','${esc(subject)}')" style="width:62px"/>`;
+  const inp=td.querySelector('input');inp.focus();inp.select();
+}
+function commitCell(input,grade,idx,subject){
+  const val=input.value.trim();
+  if(!marksData[grade])marksData[grade]={};
+  if(!marksData[grade][idx])marksData[grade][idx]={};
+  marksData[grade][idx][subject]=val;
+  hasUnsaved=true;document.getElementById('saveBtn').style.display='flex';
+  const td=input.parentElement;const sc=getScoreClass(val);
+  td.innerHTML=`<span class="score-val ${sc}${!val?' empty':''}">${val||'—'}</span>`;
+  td.onclick=()=>editCell(td,grade,idx,subject);
+  updateRowTotals(grade,idx);computeRanks(grade);
+}
+function cellKey(e,input,grade,idx,subject){
+  if(e.key==='Enter'||e.key==='Tab'){e.preventDefault();commitCell(input,grade,idx,subject);}
+  else if(e.key==='Escape')commitCell(input,grade,idx,subject);
+}
+function updateRowTotals(grade,idx){
+  const g=GRADES[grade];const marks=marksData[grade]?.[idx]||{};
+  let total=0,cnt=0;
+  g.subjects.forEach(sub=>{const v=parseFloat(marks[sub]);if(!isNaN(v)){total+=v;cnt++;}});
+  document.querySelectorAll('#gradeContent table tbody tr:not(.separator)').forEach(row=>{
+    const cells=row.querySelectorAll('td');
+    if(cells[1]&&cells[1].textContent.trim()===idx){
+      const nc=g.subjects.length;
+      cells[nc+3].textContent=total>0?total:'—';
+      cells[nc+4].textContent=cnt>0?(total/cnt).toFixed(1):'—';
+    }
+  });
+}
+function computeRanks(grade){
+  const g=GRADES[grade];const scores=[];
+  g.students.forEach(s=>{
+    if(!s)return;
+    const marks=marksData[grade]?.[s.index]||{};
+    let total=0,cnt=0;
+    g.subjects.forEach(sub=>{const v=parseFloat(marks[sub]);if(!isNaN(v)){total+=v;cnt++;}});
+    scores.push({index:s.index,total:cnt>0?total:-1});
+  });
+  const sorted=[...scores].filter(x=>x.total>=0).sort((a,b)=>b.total-a.total);
+  scores.forEach(s=>{
+    const el=document.getElementById(`rk_${grade.replace(/\s/g,'_')}_${s.index}`);
+    if(!el)return;
+    if(s.total<0){el.textContent='—';return;}
+    el.textContent=sorted.findIndex(x=>x.index===s.index)+1;
+  });
+}
+
+// ════════════════════════════════════
+// SUMMARY & PRINT VIEW
+// ════════════════════════════════════
+function showSummary(grade){
+  currentGrade=grade;
+  document.getElementById('mainView').style.display='none';
+  document.getElementById('summaryView').style.display='block';
+  document.querySelectorAll('.grade-tab').forEach(t=>t.classList.toggle('active',t.textContent==='📊 '+grade));
+  const now=new Date();
+  document.getElementById('printDateLine').textContent=
+    'Printed on: '+now.toLocaleDateString('en-GB',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+  document.getElementById('summaryContent').innerHTML=buildSummarySection(grade);
+}
+
+function buildSummarySection(grade){
+  const g=GRADES[grade];
+  // Compute ranked list
+  const rawList=[];
+  g.students.forEach(s=>{
+    if(!s)return;
+    const m=marksData[grade]?.[s.index]||{};
+    let total=0,cnt=0;
+    g.subjects.forEach(sub=>{const v=parseFloat(m[sub]);if(!isNaN(v)){total+=v;cnt++;}});
+    rawList.push({...s,total:cnt>0?total:-1,avg:cnt>0?(total/cnt).toFixed(1):''});
+  });
+  const sorted=[...rawList].filter(x=>x.total>=0).sort((a,b)=>b.total-a.total);
+  const withRank=rawList.map(s=>{
+    const r=sorted.findIndex(x=>x.index===s.index);
+    return{...s,rank:r>=0?r+1:'—'};
+  });
+
+  const cnt=sorted.length;
+  const passing=sorted.filter(s=>parseFloat(s.avg)>=35).length;
+  const topStudent=sorted.length>0?sorted[0]:{};
+  const classAvg=sorted.length>0?(sorted.reduce((a,b)=>a+b.total,0)/sorted.length/g.subjects.length).toFixed(1):'—';
+
+  const today=new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'2-digit',year:'numeric'});
+
+  let html=`<div class="sum-card">
+    <div class="sum-title-bar">
+      <h3>📋 ${grade} — Student Results Summary</h3>
+      <span>${cnt} students · ${g.subjects.length} subjects</span>
+    </div>
+    <div class="sum-table-wrap"><table class="sum-table"><thead><tr>
+      <th>Rank</th><th>No.</th><th>Index No.</th><th>Full Name</th>`;
+  g.subjects.forEach(s=>html+=`<th>${s}</th>`);
+  html+=`<th>Total</th><th>Average</th></tr></thead><tbody>`;
+
+  let ri=0;
+  g.students.forEach(s=>{
+    if(!s){html+=`<tr class="sep-row"><td colspan="${4+g.subjects.length+2}"></td></tr>`;return;}
+    const rs=withRank[ri++];
+    const m=marksData[grade]?.[s.index]||{};
+    const rn=rs.rank;
+    const rcls=rn===1?'r1':rn===2?'r2':rn===3?'r3':'';
+    const medal=rn===1?'🥇 ':rn===2?'🥈 ':rn===3?'🥉 ':'';
+    html+=`<tr>
+      <td class="srank ${rcls}">${medal}${rn}</td>
+      <td>${s.no}</td><td>${s.index}</td>
+      <td><strong>${s.name}</strong></td>`;
+    g.subjects.forEach(sub=>{
+      const v=m[sub]||'';const sc=getScoreClass(v);
+      html+=`<td class="${sc}" style="font-weight:700">${v||'—'}</td>`;
+    });
+    html+=`<td class="stotal">${rs.total>=0?rs.total:'—'}</td>
+      <td class="savg">${rs.avg||'—'}</td></tr>`;
+  });
+  html+=`</tbody></table></div>`;
+
+  // Stats boxes
+  html+=`<div class="stats-row">
+    <div class="stat-box"><div class="stat-num">${cnt}</div><div class="stat-lbl">Total Students</div></div>
+    <div class="stat-box"><div class="stat-num">${passing}</div><div class="stat-lbl">Passed</div></div>
+    <div class="stat-box"><div class="stat-num">${cnt-passing}</div><div class="stat-lbl">Failed</div></div>
+    <div class="stat-box"><div class="stat-num">${classAvg}%</div><div class="stat-lbl">Class Average</div></div>
+    <div class="stat-box"><div class="stat-num" style="font-size:13px">${topStudent.name||'—'}</div><div class="stat-lbl">Rank 1 Student</div></div>
+  </div>`;
+
+  // ── SIGNATURE SECTION ──
+  html+=`<div class="sig-section">
+
+    <div class="sig-box">
+      <div class="sig-label">✍️ Class Teacher</div>
+      <input class="sig-name-input" type="text" placeholder="Name of Class Teacher" />
+      <div class="sig-space"></div>
+      <div class="sig-caption">Signature of Class Teacher</div>
+      <div class="sig-date-row">
+        <span class="sig-date-label">Date :</span>
+        <input class="sig-date-input" type="text" value="${today}" />
+      </div>
+    </div>
+
+    <div class="sig-box">
+      <div class="sig-label">✍️ Sectional Head</div>
+      <input class="sig-name-input" type="text" placeholder="Name of Sectional Head" />
+      <div class="sig-space"></div>
+      <div class="sig-caption">Signature of Sectional Head</div>
+      <div class="sig-date-row">
+        <span class="sig-date-label">Date :</span>
+        <input class="sig-date-input" type="text" value="${today}" />
+      </div>
+    </div>
+
+    <div class="sig-box">
+      <div class="sig-label">✍️ Principal</div>
+      <input class="sig-name-input" type="text" placeholder="Name of Principal" />
+      <div class="sig-space"></div>
+      <div class="sig-caption">Signature of Principal</div>
+      <div class="sig-date-row">
+        <span class="sig-date-label">Date :</span>
+        <input class="sig-date-input" type="text" value="${today}" />
+      </div>
+    </div>
+
+  </div>`;
+
+  // Print / back buttons (hidden on print)
+  html+=`<div style="padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:10px;flex-wrap:wrap" class="no-print">
+    <button class="print-btn" onclick="window.print()">🖨️ Print This Summary</button>
+    <button class="back-btn" onclick="backToMarks()">← Back to Marks</button>
+  </div>`;
+
+  html+=`</div>`;
+  return html;
+}
+
+// ════════════════════════════════════
+// ADMIN PANEL — PRINCIPAL FULL CONTROL
+// ════════════════════════════════════
+let adminCurrentTab='accounts';
+let adminCurrentGrade=Object.keys(GRADES)[0];
+
+function renderAdminPanel(){
+  const isPrincipal=currentUser&&currentUser.username==='admin';
+  if(!isPrincipal){
+    // Other admins: read-only account list
+    let html=`<div class="admin-section"><div class="admin-card-wrap">
+      <h3>🔑 Teacher Login Accounts</h3>
+      <p class="admin-hint">Share these details with each teacher. They can only edit their assigned grades.</p>
+      <div class="user-list">`;
+    USERS.forEach(u=>{
+      const gradesText=u.grades==='all'?'All Grades':u.grades.join(', ');
+      html+=`<div class="user-card ${u.role==='admin'?'is-admin':''}">
+        <div class="user-name">${u.role==='admin'?'👑':'👤'} ${u.name}</div>
+        <div class="user-role">${u.role==='admin'?'Administrator':'Teacher'} · ${gradesText}</div>
+        <div><span class="user-pass">@${u.username} / ${u.password}</span></div>
+      </div>`;
+    });
+    html+=`</div></div></div>`;
+    document.getElementById('adminPanel').innerHTML=html;
+    return;
+  }
+  // Principal — full panel
+  adminPanelMinimized=false;
+  document.getElementById('adminPanel').innerHTML=buildPrincipalPanel();
+  document.querySelectorAll('.admin-tab-btn').forEach(b=>{
+    b.classList.toggle('active',b.dataset.tab===adminCurrentTab);
+  });
+  document.querySelectorAll('.admin-tab-pane').forEach(p=>{
+    p.classList.toggle('active',p.dataset.tab===adminCurrentTab);
+  });
+  renderAccountsTab();
+  renderStudentsTab();
+  renderSubjectsTab();
+}
+
+let adminPanelMinimized=false;
+
+function buildPrincipalPanel(){
+  const gradeOpts=Object.keys(GRADES).map(g=>`<option value="${g}">${g}</option>`).join('');
+  return`<div class="admin-section" id="principalSection">
+  <div class="principal-banner" style="cursor:default">
+    <div class="pb-icon">👑</div>
+    <div style="flex:1">
+      <h2 style="display:flex;align-items:center;gap:8px">
+        Principal Admin Panel
+        <span class="minimized-badge" id="miniBadge" style="display:none">▲ MINIMIZED — Click to expand</span>
+      </h2>
+      <p id="bannerSubtext">Full control: manage accounts, students, subjects &amp; grades</p>
+    </div>
+    <button class="minimize-btn" id="minimizeBtn" onclick="toggleAdminMinimize()" title="Minimize panel">−</button>
+    <button onclick="lockEditPanel()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);color:white;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-family:inherit;font-weight:700;white-space:nowrap;margin-left:6px">🔒 Lock</button>
+  </div>
+
+  <div class="admin-panel-body" id="adminPanelBody">
+    <div class="admin-tabs">
+      <button class="admin-tab-btn active" data-tab="accounts" onclick="switchAdminTab('accounts')">🔑 Accounts &amp; Passwords</button>
+      <button class="admin-tab-btn" data-tab="students" onclick="switchAdminTab('students')">👨‍🎓 Students</button>
+      <button class="admin-tab-btn" data-tab="subjects" onclick="switchAdminTab('subjects')">📚 Subjects &amp; Grades</button>
+    </div>
+
+    <!-- TAB: ACCOUNTS -->
+    <div class="admin-tab-pane active" data-tab="accounts">
+      <div id="accountsFlash" class="flash-ok"></div>
+      <div id="accountsList"></div>
+    </div>
+
+    <!-- TAB: STUDENTS -->
+    <div class="admin-tab-pane" data-tab="students">
+      <div id="studentsFlash" class="flash-ok"></div>
+      <div class="grade-select-wrap">
+        <label>Select Grade:</label>
+        <select onchange="adminCurrentGrade=this.value;renderStudentsTab()" id="studentGradeSelect">${gradeOpts}</select>
+      </div>
+      <div id="studentsList"></div>
+    </div>
+
+    <!-- TAB: SUBJECTS & GRADES -->
+    <div class="admin-tab-pane" data-tab="subjects">
+      <div id="subjectsFlash" class="flash-ok"></div>
+      <div class="grade-select-wrap">
+        <label>Select Grade:</label>
+        <select onchange="adminCurrentGrade=this.value;renderSubjectsTab()" id="subjectGradeSelect">${gradeOpts}</select>
+      </div>
+      <div id="subjectsList"></div>
+      <div class="section-divider"><span>➕ Add New Grade</span></div>
+      <div class="admin-card-wrap">
+        <h3>➕ Add New Grade</h3>
+        <div class="add-grade-row">
+          <div><label>Grade Name</label><input id="newGradeName" placeholder="e.g. Grade 06A" /></div>
+          <div><label>Subjects (comma-separated)</label><input id="newGradeSubjects" placeholder="e.g. Religion,Tamil,English" /></div>
+          <button class="add-grade-btn" onclick="addNewGrade()">+ Add Grade</button>
+        </div>
+      </div>
+    </div>
+  </div><!-- end admin-panel-body -->
+</div>`;
+}
+
+function toggleAdminMinimize(){
+  adminPanelMinimized=!adminPanelMinimized;
+  const body=document.getElementById('adminPanelBody');
+  const btn=document.getElementById('minimizeBtn');
+  const badge=document.getElementById('miniBadge');
+  const subtext=document.getElementById('bannerSubtext');
+  const section=document.getElementById('principalSection');
+  if(adminPanelMinimized){
+    body.classList.add('minimized');
+    btn.textContent='+';
+    btn.title='Maximize panel';
+    badge.style.display='inline-block';
+    if(subtext)subtext.style.display='none';
+    section.style.marginBottom='10px';
+    // Make banner clickable to re-expand
+    document.querySelector('#principalSection .principal-banner').style.cursor='pointer';
+    document.querySelector('#principalSection .principal-banner').onclick=function(e){
+      if(e.target===btn||btn.contains(e.target))return;
+      toggleAdminMinimize();
+    };
+  }else{
+    body.classList.remove('minimized');
+    btn.textContent='−';
+    btn.title='Minimize panel';
+    badge.style.display='none';
+    if(subtext)subtext.style.display='';
+    section.style.marginBottom='';
+    document.querySelector('#principalSection .principal-banner').style.cursor='default';
+    document.querySelector('#principalSection .principal-banner').onclick=null;
+  }
+}
+
+function switchAdminTab(tab){
+  adminCurrentTab=tab;
+  document.querySelectorAll('.admin-tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  document.querySelectorAll('.admin-tab-pane').forEach(p=>p.classList.toggle('active',p.dataset.tab===tab));
+}
+
+function showFlash(id,msg){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.textContent=msg;el.className='flash-ok show';
+  setTimeout(()=>el.className='flash-ok',2800);
+}
+
+// ── ACCOUNTS TAB ──
+function renderAccountsTab(){
+  const el=document.getElementById('accountsList');
+  if(!el)return;
+  let html=`<div class="user-list">`;
+  USERS.forEach((u,i)=>{
+    const gradesText=u.grades==='all'?'All Grades':u.grades.join(', ');
+    const allGradeOpts=Object.keys(GRADES).map(g=>`<option value="${g}" ${u.grades!=='all'&&u.grades.includes(g)?'selected':''}>${g}</option>`).join('');
+    const isSelf=u.username===currentUser.username;
+    html+=`<div class="user-card ${u.role==='admin'?'is-admin':''}" id="ucard_${i}">
+      <div class="user-name">${u.role==='admin'?'👑':'👤'} ${u.name}</div>
+      <div class="user-role">${u.role==='admin'?'Administrator':'Teacher'} · ${gradesText}</div>
+      <div class="edit-field-row"><label>Display Name</label><input id="uname_${i}" value="${u.name}" /></div>
+      <div class="edit-field-row"><label>Username</label><input id="uuser_${i}" value="${u.username}" /></div>
+      <div class="edit-field-row"><label>Password</label><input id="upass_${i}" value="${u.password}" /></div>
+      <div class="edit-field-row"><label>Role</label>
+        <select id="urole_${i}" onchange="toggleGradeFields(${i})">
+          <option value="admin" ${u.role==='admin'?'selected':''}>Admin (All Grades)</option>
+          <option value="teacher" ${u.role==='teacher'?'selected':''}>Teacher (Select Grades)</option>
+        </select>
+      </div>
+      <div class="edit-field-row" id="ugrades_wrap_${i}" style="${u.role==='admin'?'display:none':''}">
+        <label>Assigned Grades</label>
+        <select id="ugrades_${i}" multiple size="4" style="border:2px solid var(--border);border-radius:8px;padding:4px;font-size:12px;font-family:inherit;width:100%">${allGradeOpts}</select>
+      </div>
+      <button class="admin-save-btn" onclick="saveAccount(${i})">💾 Save Changes</button>
+      ${!isSelf?`<button class="admin-del-btn" onclick="deleteAccount(${i})">🗑 Remove Account</button>`:''}
+    </div>`;
+  });
+  html+=`</div>`;
+  // Add new account form
+  html+=`<div class="section-divider" style="margin-top:18px"><span>➕ Add New Account</span></div>
+  <div class="admin-card-wrap">
+    <h3>➕ Add Teacher / Admin Account</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:12px">
+      <div class="edit-field-row"><label>Name</label><input id="newAccName" placeholder="e.g. Mrs. Suha" /></div>
+      <div class="edit-field-row"><label>Username</label><input id="newAccUser" placeholder="e.g. teacher10" /></div>
+      <div class="edit-field-row"><label>Password</label><input id="newAccPass" placeholder="e.g. Grade06#" /></div>
+      <div class="edit-field-row"><label>Role</label>
+        <select id="newAccRole" onchange="document.getElementById('newAccGradesWrap').style.display=this.value==='admin'?'none':'block'">
+          <option value="teacher">Teacher</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+    </div>
+    <div id="newAccGradesWrap" class="edit-field-row" style="margin-bottom:12px">
+      <label>Assigned Grades (Ctrl+Click to multi-select)</label>
+      <select id="newAccGrades" multiple size="4" style="border:2px solid var(--border);border-radius:8px;padding:4px;font-size:12px;font-family:inherit;width:100%">
+        ${Object.keys(GRADES).map(g=>`<option value="${g}">${g}</option>`).join('')}
+      </select>
+    </div>
+    <button class="admin-save-btn" style="max-width:200px" onclick="addNewAccount()">➕ Add Account</button>
+  </div>`;
+  el.innerHTML=html;
+}
+
+function toggleGradeFields(i){
+  const role=document.getElementById(`urole_${i}`).value;
+  document.getElementById(`ugrades_wrap_${i}`).style.display=role==='admin'?'none':'';
+}
+
+function saveAccount(i){
+  const name=document.getElementById(`uname_${i}`).value.trim();
+  const username=document.getElementById(`uuser_${i}`).value.trim();
+  const password=document.getElementById(`upass_${i}`).value.trim();
+  const role=document.getElementById(`urole_${i}`).value;
+  const gradesEl=document.getElementById(`ugrades_${i}`);
+  const grades=role==='admin'?'all':[...gradesEl.selectedOptions].map(o=>o.value);
+  if(!name||!username||!password){alert('Please fill in all fields.');return;}
+  // Check username uniqueness
+  const duplicate=USERS.findIndex((u,idx)=>u.username===username&&idx!==i);
+  if(duplicate>=0){alert('Username already exists. Please choose a different one.');return;}
+  USERS[i]={...USERS[i],name,username,password,role,grades};
+  // Update current user if editing self
+  if(currentUser&&currentUser.username===USERS[i].username)currentUser=USERS[i];
+  renderAdminPanel();renderGradeTabs();
+  showFlash('accountsFlash','✅ Account updated successfully!');
+}
+
+function deleteAccount(i){
+  const u=USERS[i];
+  if(!confirm(`Remove account for "${u.name}" (@${u.username})? This cannot be undone.`))return;
+  USERS.splice(i,1);
+  renderAdminPanel();renderGradeTabs();
+  showFlash('accountsFlash','✅ Account removed.');
+}
+
+function addNewAccount(){
+  const name=document.getElementById('newAccName').value.trim();
+  const username=document.getElementById('newAccUser').value.trim();
+  const password=document.getElementById('newAccPass').value.trim();
+  const role=document.getElementById('newAccRole').value;
+  const gradesEl=document.getElementById('newAccGrades');
+  const grades=role==='admin'?'all':[...gradesEl.selectedOptions].map(o=>o.value);
+  if(!name||!username||!password){alert('Please fill in all fields.');return;}
+  if(USERS.find(u=>u.username===username)){alert('Username already exists.');return;}
+  USERS.push({username,password,role,name,grades});
+  renderAdminPanel();renderGradeTabs();
+  showFlash('accountsFlash','✅ New account added!');
+}
+
+// ── STUDENTS TAB ──
+function renderStudentsTab(){
+  const el=document.getElementById('studentsList');
+  if(!el)return;
+  const grade=adminCurrentGrade;
+  const g=GRADES[grade];
+  if(!g){el.innerHTML='<p style="color:var(--gray)">No grade selected.</p>';return;}
+  // Sync select
+  const sel=document.getElementById('studentGradeSelect');
+  if(sel)sel.value=grade;
+
+  // Collect actual students (no null separators shown, but we keep null logic)
+  let html=`<div class="admin-card-wrap">
+    <h3>👨‍🎓 Students in ${grade} <span style="font-weight:400;color:var(--gray);font-size:13px">(${g.students.filter(Boolean).length} students)</span></h3>
+    <div class="table-wrap"><table class="student-table">
+      <thead><tr><th style="width:40px">#</th><th>Index No.</th><th>Full Name</th><th style="width:80px">Action</th></tr></thead>
+      <tbody>`;
+  let rowIdx=0;
+  g.students.forEach((s,si)=>{
+    if(!s)return;
+    rowIdx++;
+    html+=`<tr>
+      <td>${rowIdx}</td>
+      <td><input id="sidx_${si}" value="${s.index}" style="width:90px" /></td>
+      <td><input id="sname_${si}" value="${s.name}" /></td>
+      <td><button class="student-del-btn" onclick="deleteStudent('${grade}',${si})">🗑</button></td>
+    </tr>`;
+  });
+  html+=`</tbody></table></div>
+  <button class="admin-save-btn" style="max-width:200px;margin-top:6px" onclick="saveAllStudents('${grade}')">💾 Save Student Changes</button>`;
+
+  // Add student row
+  html+=`<div class="section-divider"><span>➕ Add Student</span></div>
+  <div class="add-student-row">
+    <div><label>No.</label><input id="newSNo" placeholder="e.g. 27" style="width:70px" /></div>
+    <div><label>Index No.</label><input id="newSIdx" placeholder="e.g. 7900" /></div>
+    <div style="flex:2"><label>Full Name</label><input id="newSName" placeholder="e.g. S.Tharshan" /></div>
+    <button class="add-student-btn" onclick="addStudent('${grade}')">➕ Add</button>
+  </div></div>`;
+  el.innerHTML=html;
+}
+
+function saveAllStudents(grade){
+  const g=GRADES[grade];
+  let rowIdx=0;
+  g.students.forEach((s,si)=>{
+    if(!s)return;
+    const idxEl=document.getElementById(`sidx_${si}`);
+    const nameEl=document.getElementById(`sname_${si}`);
+    if(idxEl&&nameEl){
+      const oldIdx=s.index;
+      const newIdx=idxEl.value.trim();
+      const newName=nameEl.value.trim();
+      // Migrate marks if index changed
+      if(newIdx&&newIdx!==oldIdx&&marksData[grade]&&marksData[grade][oldIdx]){
+        marksData[grade][newIdx]=marksData[grade][oldIdx];
+        delete marksData[grade][oldIdx];
+      }
+      s.index=newIdx||s.index;
+      s.name=newName||s.name;
+    }
+    rowIdx++;s.no=rowIdx;
+  });
+  renderStudentsTab();
+  showFlash('studentsFlash','✅ Student list updated!');
+  if(currentGrade===grade)renderTable(grade);
+}
+
+function deleteStudent(grade,si){
+  const s=GRADES[grade].students[si];
+  if(!s)return;
+  if(!confirm(`Remove student "${s.name}" (Index: ${s.index})?`))return;
+  GRADES[grade].students.splice(si,1);
+  // Renumber
+  let no=0;
+  GRADES[grade].students.forEach(x=>{if(x)x.no=++no;});
+  renderStudentsTab();
+  showFlash('studentsFlash','✅ Student removed.');
+  if(currentGrade===grade)renderTable(grade);
+}
+
+function addStudent(grade){
+  const no=document.getElementById('newSNo').value.trim();
+  const idx=document.getElementById('newSIdx').value.trim();
+  const name=document.getElementById('newSName').value.trim();
+  if(!idx||!name){alert('Please enter Index No. and Name.');return;}
+  if(GRADES[grade].students.find(s=>s&&s.index===idx)){alert('Index number already exists in this grade.');return;}
+  const students=GRADES[grade].students.filter(Boolean);
+  const newNo=no?parseInt(no):students.length+1;
+  GRADES[grade].students.push({no:newNo,index:idx,name});
+  // Renumber
+  let c=0;GRADES[grade].students.forEach(x=>{if(x)x.no=++c;});
+  renderStudentsTab();
+  showFlash('studentsFlash',`✅ ${name} added to ${grade}!`);
+  if(currentGrade===grade)renderTable(grade);
+}
+
+// ── SUBJECTS & GRADES TAB ──
+function renderSubjectsTab(){
+  const el=document.getElementById('subjectsList');
+  if(!el)return;
+  const grade=adminCurrentGrade;
+  const g=GRADES[grade];
+  const sel=document.getElementById('subjectGradeSelect');
+  if(sel)sel.value=grade;
+  if(!g){el.innerHTML='';return;}
+  let chips=g.subjects.map((sub,si)=>`<span class="subject-chip">${sub}<button class="subject-chip-del" onclick="deleteSubject('${grade}',${si})" title="Remove">×</button></span>`).join('');
+  let html=`<div class="admin-card-wrap">
+    <h3>📚 Subjects for ${grade}</h3>
+    <div class="subjects-wrap">${chips}</div>
+    <div class="add-subject-row">
+      <input id="newSubjectInput" placeholder="Add subject, e.g. Tamil" onkeydown="if(event.key==='Enter')addSubject('${grade}')" />
+      <button class="add-subject-btn" onclick="addSubject('${grade}')">+ Add</button>
+    </div>
+    <div class="section-divider" style="margin-top:16px"><span>⚠️ Danger Zone</span></div>
+    <button class="grade-del-btn" onclick="deleteGrade('${grade}')">🗑 Delete ${grade} Entirely</button>
+  </div>`;
+  el.innerHTML=html;
+}
+
+function addSubject(grade){
+  const inp=document.getElementById('newSubjectInput');
+  const sub=inp.value.trim();
+  if(!sub)return;
+  if(GRADES[grade].subjects.includes(sub)){alert('Subject already exists.');return;}
+  GRADES[grade].subjects.push(sub);
+  renderSubjectsTab();
+  showFlash('subjectsFlash',`✅ Subject "${sub}" added!`);
+  if(currentGrade===grade)renderTable(grade);
+}
+
+function deleteSubject(grade,si){
+  const sub=GRADES[grade].subjects[si];
+  if(!confirm(`Remove subject "${sub}" from ${grade}? All marks for this subject will be lost.`))return;
+  GRADES[grade].subjects.splice(si,1);
+  renderSubjectsTab();
+  showFlash('subjectsFlash',`✅ Subject "${sub}" removed.`);
+  if(currentGrade===grade)renderTable(grade);
+}
+
+function deleteGrade(grade){
+  if(!confirm(`⚠️ Delete "${grade}" entirely? This removes all students and marks for this grade. This cannot be undone.`))return;
+  delete GRADES[grade];
+  const keys=Object.keys(GRADES);
+  adminCurrentGrade=keys.length>0?keys[0]:'';
+  renderAdminPanel();
+  renderGradeTabs();
+  showFlash('subjectsFlash',`✅ ${grade} deleted.`);
+}
+
+function addNewGrade(){
+  const name=document.getElementById('newGradeName').value.trim();
+  const subsRaw=document.getElementById('newGradeSubjects').value.trim();
+  if(!name){alert('Please enter a grade name.');return;}
+  if(GRADES[name]){alert('Grade already exists.');return;}
+  const subjects=subsRaw?subsRaw.split(',').map(s=>s.trim()).filter(Boolean):['Religion','Tamil','English','Maths','Science','History'];
+  GRADES[name]={subjects,students:[]};
+  adminCurrentGrade=name;
+  renderAdminPanel();
+  renderGradeTabs();
+  showFlash('subjectsFlash',`✅ Grade "${name}" added!`);
+}
+
+function renderGradeTabs(){
+  if(!currentUser)return;
+  const tabs=document.getElementById('gradeTabs');
+  tabs.innerHTML='';
+  const accessible=Object.keys(GRADES).filter(g=>canAccess(g));
+  accessible.forEach(g=>{
+    const btn=document.createElement('button');
+    btn.className='grade-tab';btn.textContent=g;
+    btn.onclick=()=>showGrade(g);tabs.appendChild(btn);
+  });
+  accessible.forEach(g=>{
+    const btn=document.createElement('button');
+    btn.className='grade-tab sum-tab';btn.textContent='📊 '+g;
+    btn.onclick=()=>showSummary(g);tabs.appendChild(btn);
+  });
+  if(accessible.length>0&&(!currentGrade||!GRADES[currentGrade]))showGrade(accessible[0]);
+}
+</script>
+</body>
+</html>
