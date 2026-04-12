@@ -30,12 +30,41 @@ body{font-family:'Nunito',sans-serif;background:#f1f5f9;color:var(--text);min-he
 .login-btn:hover{background:#1d4ed8}
 .login-error{color:var(--red);font-size:13px;margin-top:8px;display:none}
 
+/* ── YEAR/TERM MODAL ── */
+#yearTermModal{display:none;position:fixed;inset:0;background:linear-gradient(135deg,#1a2744 0%,#2563eb 100%);z-index:9999;align-items:center;justify-content:center}
+#yearTermModal.show{display:flex}
+.yt-box{background:white;border-radius:24px;padding:40px 36px;width:420px;max-width:95vw;box-shadow:0 24px 64px rgba(0,0,0,0.35);text-align:center}
+.yt-box .yt-icon{font-size:46px;margin-bottom:10px}
+.yt-box h2{font-size:20px;font-weight:900;color:var(--navy);margin-bottom:4px}
+.yt-box .yt-sub{color:var(--gray);font-size:13px;margin-bottom:28px}
+.yt-section-label{font-size:12px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.6px;text-align:left;margin-bottom:10px}
+.yt-grid{display:grid;gap:10px;margin-bottom:24px}
+.yt-grid.years{grid-template-columns:repeat(3,1fr)}
+.yt-grid.terms{grid-template-columns:repeat(3,1fr)}
+.yt-btn{padding:12px 8px;border:2px solid var(--border);border-radius:12px;background:white;font-size:15px;font-weight:800;font-family:inherit;color:var(--navy);cursor:pointer;transition:.2s}
+.yt-btn:hover{border-color:var(--sky);color:var(--blue);background:#eff6ff}
+.yt-btn.selected{background:var(--blue);border-color:var(--blue);color:white}
+.yt-term-btn{padding:14px 8px;border:2px solid var(--border);border-radius:12px;background:white;font-size:14px;font-weight:800;font-family:inherit;color:var(--navy);cursor:pointer;transition:.2s;display:flex;flex-direction:column;align-items:center;gap:4px}
+.yt-term-btn:hover{border-color:var(--sky);color:var(--blue);background:#eff6ff}
+.yt-term-btn.selected{background:var(--blue);border-color:var(--blue);color:white}
+.yt-term-num{font-size:22px;font-weight:900}
+.yt-term-lbl{font-size:11px;font-weight:700;opacity:.8}
+.yt-confirm-btn{width:100%;padding:14px;background:var(--green);color:white;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;transition:.2s;margin-top:4px}
+.yt-confirm-btn:hover{background:#15803d}
+.yt-confirm-btn:disabled{background:#9ca3af;cursor:not-allowed}
+.yt-step{display:none}
+.yt-step.active{display:block}
+.yt-selected-year{display:inline-block;background:#eff6ff;color:var(--blue);border-radius:8px;padding:3px 12px;font-size:13px;font-weight:800;margin-bottom:16px}
+.yt-back-link{background:none;border:none;color:var(--gray);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:10px;text-decoration:underline}
+
 /* ── APP SHELL ── */
 #app{display:none}
 header{background:var(--navy);color:white;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:62px;box-shadow:0 2px 10px rgba(0,0,0,0.2);position:sticky;top:0;z-index:100}
 header h1{font-size:18px;font-weight:800}
 .header-right{display:flex;align-items:center;gap:14px}
 .user-badge{background:rgba(255,255,255,0.15);border-radius:8px;padding:5px 12px;font-size:13px;font-weight:700}
+.term-badge{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:800;color:rgba(255,255,255,.9);cursor:pointer;transition:.2s}
+.term-badge:hover{background:rgba(255,255,255,.22)}
 .logout-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);color:white;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;font-weight:600}
 .logout-btn:hover{background:rgba(255,255,255,0.2)}
 .main{padding:24px;max-width:1500px;margin:0 auto}
@@ -98,14 +127,12 @@ td.editable input{width:58px;padding:4px 6px;border:2px solid var(--blue);border
 .user-name{font-weight:800;font-size:14px;color:var(--navy)}
 .user-role{font-size:12px;color:var(--gray);margin:2px 0}
 .user-pass{font-size:12px;color:var(--blue);font-weight:700;font-family:monospace;background:#f0f9ff;padding:2px 6px;border-radius:4px;display:inline-block;margin-top:4px}
-/* Principal Admin Tabs */
 .admin-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
 .admin-tab-btn{padding:8px 16px;background:#f1f5f9;border:2px solid var(--border);border-radius:10px;cursor:pointer;font-size:13px;font-weight:700;font-family:inherit;color:var(--gray);transition:.2s}
 .admin-tab-btn:hover{border-color:var(--sky);color:var(--sky)}
 .admin-tab-btn.active{background:var(--navy);border-color:var(--navy);color:white}
 .admin-tab-pane{display:none}
 .admin-tab-pane.active{display:block}
-/* Edit fields inside user cards */
 .edit-field-row{display:flex;flex-direction:column;gap:3px;margin-top:8px}
 .edit-field-row label{font-size:11px;font-weight:800;color:var(--gray);text-transform:uppercase;letter-spacing:.4px}
 .edit-field-row input{padding:7px 10px;border:2px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;font-weight:600;width:100%;transition:.2s}
@@ -116,7 +143,6 @@ td.editable input{width:58px;padding:4px 6px;border:2px solid var(--blue);border
 .admin-save-btn:hover{background:#1d4ed8}
 .admin-del-btn{margin-top:5px;background:#fee2e2;color:var(--red);border:2px solid #fca5a5;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;width:100%;transition:.2s}
 .admin-del-btn:hover{background:var(--red);color:white}
-/* Student management */
 .student-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:12px}
 .student-table th{background:#f8fafc;color:var(--navy);font-weight:800;padding:8px 10px;text-align:left;border-bottom:2px solid var(--border)}
 .student-table td{padding:7px 10px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
@@ -136,7 +162,6 @@ td.editable input{width:58px;padding:4px 6px;border:2px solid var(--blue);border
 .grade-select-wrap label{font-weight:800;font-size:13px;color:var(--navy)}
 .grade-select-wrap select{padding:8px 14px;border:2px solid var(--border);border-radius:10px;font-size:13px;font-family:inherit;font-weight:700;background:white;cursor:pointer}
 .grade-select-wrap select:focus{outline:none;border-color:var(--blue)}
-/* Subjects editor */
 .subjects-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
 .subject-chip{display:inline-flex;align-items:center;gap:5px;background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:20px;padding:4px 10px 4px 12px;font-size:12px;font-weight:700;color:#1d4ed8}
 .subject-chip-del{background:none;border:none;cursor:pointer;color:#93c5fd;font-size:14px;line-height:1;font-weight:900;padding:0 2px}
@@ -146,7 +171,6 @@ td.editable input{width:58px;padding:4px 6px;border:2px solid var(--blue);border
 .add-subject-row input:focus{outline:none;border-color:var(--blue)}
 .add-subject-btn{background:var(--blue);color:white;border:none;padding:7px 16px;border-radius:8px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit}
 .add-subject-btn:hover{background:#1d4ed8}
-/* Grade management */
 .add-grade-row{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;background:#fff7ed;border-radius:10px;padding:12px;border:2px dashed #fdba74;margin-top:12px}
 .add-grade-row>div{display:flex;flex-direction:column;gap:3px;flex:1;min-width:120px}
 .add-grade-row label{font-size:11px;font-weight:800;color:#d97706}
@@ -160,61 +184,21 @@ td.editable input{width:58px;padding:4px 6px;border:2px solid var(--blue);border
 .principal-banner .pb-icon{font-size:36px}
 .principal-banner h2{color:white;font-size:17px;font-weight:900;margin-bottom:2px}
 .principal-banner p{color:rgba(255,255,255,.7);font-size:12px}
-
-/* ── MINIMIZE / MAXIMIZE ── */
-.admin-panel-body{
-  overflow:hidden;
-  max-height:4000px;
-  transition:max-height .45s cubic-bezier(.4,0,.2,1), opacity .35s ease;
-  opacity:1;
-}
-.admin-panel-body.minimized{
-  max-height:0;
-  opacity:0;
-  pointer-events:none;
-}
-.admin-section.is-minimized .principal-banner{
-  border-radius:14px;
-  margin-bottom:0;
-}
-.minimize-btn{
-  background:rgba(255,255,255,.15);
-  border:1.5px solid rgba(255,255,255,.35);
-  color:white;
-  width:34px;height:34px;
-  border-radius:8px;
-  cursor:pointer;
-  font-size:18px;
-  font-family:inherit;
-  font-weight:900;
-  display:flex;align-items:center;justify-content:center;
-  transition:.2s;
-  flex-shrink:0;
-  line-height:1;
-}
-.minimize-btn:hover{background:rgba(255,255,255,.28);}
-.minimized-badge{
-  background:rgba(255,255,255,.18);
-  border:1px solid rgba(255,255,255,.3);
-  color:white;
-  border-radius:20px;
-  padding:3px 10px;
-  font-size:11px;
-  font-weight:800;
-  display:none;
-  letter-spacing:.3px;
-}
-.admin-section.is-minimized .minimized-badge{display:inline-block;}
-.admin-section.is-minimized .principal-banner p{display:none;}
+.admin-panel-body{overflow:hidden;max-height:4000px;transition:max-height .45s cubic-bezier(.4,0,.2,1), opacity .35s ease;opacity:1}
+.admin-panel-body.minimized{max-height:0;opacity:0;pointer-events:none}
+.admin-section.is-minimized .principal-banner{border-radius:14px;margin-bottom:0}
+.minimize-btn{background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.35);color:white;width:34px;height:34px;border-radius:8px;cursor:pointer;font-size:18px;font-family:inherit;font-weight:900;display:flex;align-items:center;justify-content:center;transition:.2s;flex-shrink:0;line-height:1}
+.minimize-btn:hover{background:rgba(255,255,255,.28)}
+.minimized-badge{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);color:white;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:800;display:none;letter-spacing:.3px}
+.admin-section.is-minimized .minimized-badge{display:inline-block}
+.admin-section.is-minimized .principal-banner p{display:none}
 .flash-ok{background:#dcfce7;color:#15803d;border:1px solid #86efac;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:700;margin-bottom:10px;display:none}
 .flash-ok.show{display:block}
 .section-divider{display:flex;align-items:center;gap:10px;margin:14px 0}
 .section-divider span{font-size:12px;font-weight:800;color:var(--gray);white-space:nowrap}
 .section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:var(--border)}
 
-/* ══════════════════════════════════
-   SUMMARY VIEW (screen)
-══════════════════════════════════ */
+/* ══ SUMMARY VIEW ══ */
 #summaryView{display:none}
 .sum-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
 .sum-topbar h2{font-size:18px;font-weight:900;color:var(--navy)}
@@ -223,8 +207,6 @@ td.editable input{width:58px;padding:4px 6px;border:2px solid var(--blue);border
 .print-btn:hover{background:#15803d}
 .back-btn{background:var(--navy);color:white;border:none;padding:9px 20px;border-radius:10px;font-size:13px;font-weight:800;cursor:pointer;font-family:inherit}
 .back-btn:hover{background:#243460}
-
-/* Summary card */
 .sum-card{background:white;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,.06);overflow:hidden;margin-bottom:24px}
 .sum-title-bar{background:var(--navy);color:white;padding:14px 22px;display:flex;align-items:center;justify-content:space-between}
 .sum-title-bar h3{font-size:16px;font-weight:800}
@@ -241,40 +223,22 @@ td.editable input{width:58px;padding:4px 6px;border:2px solid var(--blue);border
 .sum-table .savg{font-weight:700;color:var(--blue)}
 .sum-table .srank{font-weight:900}
 .sum-table .r1{color:#d97706}.sum-table .r2{color:#6b7280}.sum-table .r3{color:#92400e}
-
-/* Stats row */
 .stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;padding:16px 22px;background:#f8fafc;border-top:1px solid var(--border)}
 .stat-box{background:white;border-radius:10px;padding:10px 12px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .stat-num{font-size:22px;font-weight:900;color:var(--navy)}
 .stat-lbl{font-size:11px;color:var(--gray);margin-top:2px}
-
-/* ── SIGNATURE SECTION ── */
-.sig-section{
-  display:grid;grid-template-columns:1fr 1fr 1fr;gap:36px;
-  padding:28px 28px 22px;border-top:2px solid var(--border);background:white;
-}
+.sig-section{display:grid;grid-template-columns:1fr 1fr 1fr;gap:36px;padding:28px 28px 22px;border-top:2px solid var(--border);background:white}
 .sig-box{display:flex;flex-direction:column;gap:4px}
 .sig-label{font-size:11px;font-weight:900;color:var(--navy);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px}
-.sig-name-input{
-  border:none;border-bottom:1.5px solid #333;width:100%;
-  padding:4px 0;font-size:13px;font-family:inherit;font-weight:700;
-  background:transparent;color:var(--text);outline:none;
-}
+.sig-name-input{border:none;border-bottom:1.5px solid #333;width:100%;padding:4px 0;font-size:13px;font-family:inherit;font-weight:700;background:transparent;color:var(--text);outline:none}
 .sig-name-input::placeholder{color:#bbb;font-weight:400;font-style:italic}
 .sig-space{border-bottom:1.5px solid #333;height:54px;width:100%;margin-top:10px;margin-bottom:2px}
 .sig-caption{font-size:10.5px;color:var(--gray);text-align:center;margin-top:3px;font-weight:600}
 .sig-date-row{display:flex;align-items:center;gap:7px;margin-top:12px}
 .sig-date-label{font-size:12px;font-weight:800;color:var(--gray);white-space:nowrap}
-.sig-date-input{
-  flex:1;border:none;border-bottom:1.5px dotted #555;
-  padding:3px 0;font-size:12px;font-family:inherit;
-  background:transparent;outline:none;color:var(--text);font-weight:600;
-  text-align:center;
-}
+.sig-date-input{flex:1;border:none;border-bottom:1.5px dotted #555;padding:3px 0;font-size:12px;font-family:inherit;background:transparent;outline:none;color:var(--text);font-weight:600;text-align:center}
 
-/* ══════════════════════════════════
-   PRINT STYLES
-══════════════════════════════════ */
+/* ══ PRINT ══ */
 .print-school-header{display:none}
 @media print{
   body{background:white;font-size:11px}
@@ -304,10 +268,10 @@ td.editable input{width:58px;padding:4px 6px;border:2px solid var(--blue);border
 .print-school-header{text-align:center;padding:14px 0 10px;border-bottom:3px double #1a2744;margin-bottom:14px}
 .print-school-header h1{font-size:20px;font-weight:900;color:#1a2744;letter-spacing:.5px}
 .print-school-header p{font-size:12px;color:#6b7280;margin-top:3px}
-
 @media(max-width:600px){
   .main{padding:14px}header{padding:0 14px}header h1{font-size:14px}
   .sig-section{grid-template-columns:1fr;gap:22px}
+  .yt-grid.years{grid-template-columns:repeat(3,1fr)}
 }
 </style>
 </head>
@@ -328,11 +292,56 @@ td.editable input{width:58px;padding:4px 6px;border:2px solid var(--blue);border
   </div>
 </div>
 
+<!-- ── YEAR / TERM MODAL ── -->
+<div id="yearTermModal">
+  <div class="yt-box">
+    <div class="yt-icon">📅</div>
+    <h2>Select Academic Year & Term</h2>
+    <p class="yt-sub">Choose the year and term before entering marks</p>
+
+    <!-- Step 1: Year -->
+    <div class="yt-step active" id="ytStep1">
+      <div class="yt-section-label">Academic Year</div>
+      <div class="yt-grid years" id="yearGrid">
+        <button class="yt-btn" onclick="selectYear(2026)">2026</button>
+        <button class="yt-btn" onclick="selectYear(2027)">2027</button>
+        <button class="yt-btn" onclick="selectYear(2028)">2028</button>
+        <button class="yt-btn" onclick="selectYear(2029)">2029</button>
+        <button class="yt-btn" onclick="selectYear(2030)">2030</button>
+        <button class="yt-btn" onclick="selectYear(2031)">2031</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Term -->
+    <div class="yt-step" id="ytStep2">
+      <div class="yt-selected-year" id="selectedYearBadge"></div>
+      <div class="yt-section-label">Term</div>
+      <div class="yt-grid terms">
+        <button class="yt-term-btn" onclick="selectTerm(1)">
+          <span class="yt-term-num">1st</span>
+          <span class="yt-term-lbl">Term</span>
+        </button>
+        <button class="yt-term-btn" onclick="selectTerm(2)">
+          <span class="yt-term-num">2nd</span>
+          <span class="yt-term-lbl">Term</span>
+        </button>
+        <button class="yt-term-btn" onclick="selectTerm(3)">
+          <span class="yt-term-num">3rd</span>
+          <span class="yt-term-lbl">Term</span>
+        </button>
+      </div>
+      <button class="yt-back-link" onclick="goBackToYear()">← Change year</button>
+    </div>
+
+  </div>
+</div>
+
 <!-- ── APP ── -->
 <div id="app">
   <header>
     <h1>🏫 B/WHC School Schedule</h1>
     <div class="header-right">
+      <button class="term-badge" id="termBadge" onclick="showYearTermModal(true)" title="Click to change year/term"></button>
       <span class="user-badge" id="userBadge"></span>
       <button class="logout-btn" onclick="doLogout()">Logout</button>
     </div>
@@ -341,16 +350,14 @@ td.editable input{width:58px;padding:4px 6px;border:2px solid var(--blue);border
   <div class="main">
     <div class="grade-tabs" id="gradeTabs"></div>
 
-    <!-- Marks entry view -->
     <div id="mainView">
       <div id="gradeContent"></div>
       <div id="adminPanel"></div>
     </div>
 
-    <!-- Summary / Print view -->
     <div id="summaryView">
       <div class="print-school-header">
-        <h1><img src="SchLogo1.png"><br>B/WHC School — Student Results</h1>
+        <h1><img src="SchLogo1.png" style="max-height:48px;vertical-align:middle;margin-right:8px" onerror="this.style.display='none'"><br>B/WHC School — Student Results</h1>
         <p id="printDateLine"></p>
       </div>
       <div class="sum-topbar no-print">
@@ -526,8 +533,70 @@ const GRADES={
 // STATE & STORAGE
 // ════════════════════════════════════
 let currentUser=null,currentGrade=null,marksData={},hasUnsaved=false;
+let selectedYear=null,selectedTerm=null;
 
-function skey(g,i,s){return`marks_${g}_${i}_${s}`}
+// ════════════════════════════════════
+// YEAR / TERM SELECTION
+// ════════════════════════════════════
+function showYearTermModal(isChange){
+  selectedYear=null;selectedTerm=null;
+  document.querySelectorAll('.yt-btn,.yt-term-btn').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('ytStep1').classList.add('active');
+  document.getElementById('ytStep2').classList.remove('active');
+  const modal=document.getElementById('yearTermModal');
+  modal.classList.add('show');
+}
+
+function selectYear(yr){
+  selectedYear=yr;
+  document.querySelectorAll('#yearGrid .yt-btn').forEach(b=>{
+    b.classList.toggle('selected',parseInt(b.textContent)===yr);
+  });
+  // Move to step 2
+  setTimeout(()=>{
+    document.getElementById('ytStep1').classList.remove('active');
+    document.getElementById('ytStep2').classList.add('active');
+    document.getElementById('selectedYearBadge').textContent='📅 Year: '+yr;
+  },180);
+}
+
+function goBackToYear(){
+  selectedTerm=null;
+  document.querySelectorAll('.yt-term-btn').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('ytStep2').classList.remove('active');
+  document.getElementById('ytStep1').classList.add('active');
+}
+
+function selectTerm(t){
+  selectedTerm=t;
+  document.querySelectorAll('.yt-term-btn').forEach(b=>b.classList.remove('selected'));
+  event.currentTarget.classList.add('selected');
+  // Short delay then close
+  setTimeout(()=>{
+    document.getElementById('yearTermModal').classList.remove('show');
+    updateTermBadge();
+    if(!document.getElementById('app').style.display||document.getElementById('app').style.display==='none'){
+      document.getElementById('app').style.display='block';
+      initApp();
+    }
+  },280);
+}
+
+function updateTermBadge(){
+  const ordinals=['','1st','2nd','3rd'];
+  document.getElementById('termBadge').textContent=
+    '📅 '+selectedYear+' · '+ordinals[selectedTerm]+' Term';
+}
+
+function termLabel(){
+  const ordinals=['','1st','2nd','3rd'];
+  return ordinals[selectedTerm]+' Term '+selectedYear;
+}
+
+// ════════════════════════════════════
+// MARKS STORAGE (year+term scoped)
+// ════════════════════════════════════
+function skey(g,i,s){return`marks_${selectedYear}_T${selectedTerm}_${g}_${i}_${s}`}
 function loadMarks(grade){
   const g=GRADES[grade];
   if(!marksData[grade])marksData[grade]={};
@@ -564,20 +633,21 @@ function doLogin(){
   if(!user){document.getElementById('loginError').style.display='block';return;}
   currentUser=user;
   document.getElementById('loginScreen').style.display='none';
-  document.getElementById('app').style.display='block';
   document.getElementById('userBadge').textContent='👤 '+user.name;
-  initApp();
+  // Show year/term modal before app
+  showYearTermModal(false);
 }
 document.getElementById('passwordInput').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
 document.getElementById('usernameInput').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('passwordInput').focus()});
 function doLogout(){
   if(hasUnsaved&&!confirm('Unsaved changes. Logout?'))return;
-  currentUser=null;
+  currentUser=null;selectedYear=null;selectedTerm=null;
   document.getElementById('loginScreen').style.display='flex';
   document.getElementById('app').style.display='none';
   document.getElementById('usernameInput').value='';
   document.getElementById('passwordInput').value='';
   document.getElementById('loginError').style.display='none';
+  document.getElementById('yearTermModal').classList.remove('show');
 }
 function canAccess(grade){
   if(!currentUser)return false;
@@ -588,6 +658,7 @@ function canAccess(grade){
 // INIT
 // ════════════════════════════════════
 function initApp(){
+  marksData={};
   Object.keys(GRADES).forEach(g=>loadMarks(g));
   renderGradeTabs();
   if(currentUser.role==='admin')renderAdminPanel();
@@ -715,13 +786,12 @@ function showSummary(grade){
   document.querySelectorAll('.grade-tab').forEach(t=>t.classList.toggle('active',t.textContent==='📊 '+grade));
   const now=new Date();
   document.getElementById('printDateLine').textContent=
-    'Printed on: '+now.toLocaleDateString('en-GB',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+    termLabel()+' | Printed on: '+now.toLocaleDateString('en-GB',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
   document.getElementById('summaryContent').innerHTML=buildSummarySection(grade);
 }
 
 function buildSummarySection(grade){
   const g=GRADES[grade];
-  // Compute ranked list
   const rawList=[];
   g.students.forEach(s=>{
     if(!s)return;
@@ -740,12 +810,12 @@ function buildSummarySection(grade){
   const passing=sorted.filter(s=>parseFloat(s.avg)>=35).length;
   const topStudent=sorted.length>0?sorted[0]:{};
   const classAvg=sorted.length>0?(sorted.reduce((a,b)=>a+b.total,0)/sorted.length/g.subjects.length).toFixed(1):'—';
-
   const today=new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'2-digit',year:'numeric'});
+  const tl=termLabel();
 
   let html=`<div class="sum-card">
     <div class="sum-title-bar">
-      <h3>📋 ${grade} — Student Results Summary</h3>
+      <h3>📋 ${grade} — ${tl} Results</h3>
       <span>${cnt} students · ${g.subjects.length} subjects</span>
     </div>
     <div class="sum-table-wrap"><table class="sum-table"><thead><tr>
@@ -774,18 +844,18 @@ function buildSummarySection(grade){
   });
   html+=`</tbody></table></div>`;
 
-  // Stats boxes
+  // Stats
   html+=`<div class="stats-row">
     <div class="stat-box"><div class="stat-num">${cnt}</div><div class="stat-lbl">Total Students</div></div>
     <div class="stat-box"><div class="stat-num">${passing}</div><div class="stat-lbl">Passed</div></div>
     <div class="stat-box"><div class="stat-num">${cnt-passing}</div><div class="stat-lbl">Failed</div></div>
     <div class="stat-box"><div class="stat-num">${classAvg}%</div><div class="stat-lbl">Class Average</div></div>
     <div class="stat-box"><div class="stat-num" style="font-size:13px">${topStudent.name||'—'}</div><div class="stat-lbl">Rank 1 Student</div></div>
+    <div class="stat-box"><div class="stat-num" style="font-size:15px">${tl}</div><div class="stat-lbl">Academic Period</div></div>
   </div>`;
 
-  // ── SIGNATURE SECTION ──
+  // Signature section
   html+=`<div class="sig-section">
-
     <div class="sig-box">
       <div class="sig-label">✍️ Class Teacher</div>
       <input class="sig-name-input" type="text" placeholder="Name of Class Teacher" />
@@ -796,7 +866,6 @@ function buildSummarySection(grade){
         <input class="sig-date-input" type="text" value="${today}" />
       </div>
     </div>
-
     <div class="sig-box">
       <div class="sig-label">✍️ Sectional Head</div>
       <input class="sig-name-input" type="text" placeholder="Name of Sectional Head" />
@@ -807,7 +876,6 @@ function buildSummarySection(grade){
         <input class="sig-date-input" type="text" value="${today}" />
       </div>
     </div>
-
     <div class="sig-box">
       <div class="sig-label">✍️ Principal</div>
       <input class="sig-name-input" type="text" placeholder="Name of Principal" />
@@ -818,21 +886,17 @@ function buildSummarySection(grade){
         <input class="sig-date-input" type="text" value="${today}" />
       </div>
     </div>
-
   </div>`;
 
-  // Print / back buttons (hidden on print)
   html+=`<div style="padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:10px;flex-wrap:wrap" class="no-print">
     <button class="print-btn" onclick="window.print()">🖨️ Print This Summary</button>
     <button class="back-btn" onclick="backToMarks()">← Back to Marks</button>
-  </div>`;
-
-  html+=`</div>`;
+  </div></div>`;
   return html;
 }
 
 // ════════════════════════════════════
-// ADMIN PANEL — PRINCIPAL FULL CONTROL
+// ADMIN PANEL
 // ════════════════════════════════════
 let adminCurrentTab='accounts';
 let adminCurrentGrade=Object.keys(GRADES)[0];
@@ -840,7 +904,6 @@ let adminCurrentGrade=Object.keys(GRADES)[0];
 function renderAdminPanel(){
   const isPrincipal=currentUser&&currentUser.username==='admin';
   if(!isPrincipal){
-    // Other admins: read-only account list
     let html=`<div class="admin-section"><div class="admin-card-wrap">
       <h3>🔑 Teacher Login Accounts</h3>
       <p class="admin-hint">Share these details with each teacher. They can only edit their assigned grades.</p>
@@ -857,18 +920,11 @@ function renderAdminPanel(){
     document.getElementById('adminPanel').innerHTML=html;
     return;
   }
-  // Principal — full panel
   adminPanelMinimized=false;
   document.getElementById('adminPanel').innerHTML=buildPrincipalPanel();
-  document.querySelectorAll('.admin-tab-btn').forEach(b=>{
-    b.classList.toggle('active',b.dataset.tab===adminCurrentTab);
-  });
-  document.querySelectorAll('.admin-tab-pane').forEach(p=>{
-    p.classList.toggle('active',p.dataset.tab===adminCurrentTab);
-  });
-  renderAccountsTab();
-  renderStudentsTab();
-  renderSubjectsTab();
+  document.querySelectorAll('.admin-tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===adminCurrentTab));
+  document.querySelectorAll('.admin-tab-pane').forEach(p=>p.classList.toggle('active',p.dataset.tab===adminCurrentTab));
+  renderAccountsTab();renderStudentsTab();renderSubjectsTab();
 }
 
 let adminPanelMinimized=false;
@@ -888,21 +944,16 @@ function buildPrincipalPanel(){
     <button class="minimize-btn" id="minimizeBtn" onclick="toggleAdminMinimize()" title="Minimize panel">−</button>
     <button onclick="lockEditPanel()" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);color:white;padding:7px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-family:inherit;font-weight:700;white-space:nowrap;margin-left:6px">🔒 Lock</button>
   </div>
-
   <div class="admin-panel-body" id="adminPanelBody">
     <div class="admin-tabs">
       <button class="admin-tab-btn active" data-tab="accounts" onclick="switchAdminTab('accounts')">🔑 Accounts &amp; Passwords</button>
       <button class="admin-tab-btn" data-tab="students" onclick="switchAdminTab('students')">👨‍🎓 Students</button>
       <button class="admin-tab-btn" data-tab="subjects" onclick="switchAdminTab('subjects')">📚 Subjects &amp; Grades</button>
     </div>
-
-    <!-- TAB: ACCOUNTS -->
     <div class="admin-tab-pane active" data-tab="accounts">
       <div id="accountsFlash" class="flash-ok"></div>
       <div id="accountsList"></div>
     </div>
-
-    <!-- TAB: STUDENTS -->
     <div class="admin-tab-pane" data-tab="students">
       <div id="studentsFlash" class="flash-ok"></div>
       <div class="grade-select-wrap">
@@ -911,8 +962,6 @@ function buildPrincipalPanel(){
       </div>
       <div id="studentsList"></div>
     </div>
-
-    <!-- TAB: SUBJECTS & GRADES -->
     <div class="admin-tab-pane" data-tab="subjects">
       <div id="subjectsFlash" class="flash-ok"></div>
       <div class="grade-select-wrap">
@@ -930,7 +979,7 @@ function buildPrincipalPanel(){
         </div>
       </div>
     </div>
-  </div><!-- end admin-panel-body -->
+  </div>
 </div>`;
 }
 
@@ -942,24 +991,16 @@ function toggleAdminMinimize(){
   const subtext=document.getElementById('bannerSubtext');
   const section=document.getElementById('principalSection');
   if(adminPanelMinimized){
-    body.classList.add('minimized');
-    btn.textContent='+';
-    btn.title='Maximize panel';
-    badge.style.display='inline-block';
-    if(subtext)subtext.style.display='none';
+    body.classList.add('minimized');btn.textContent='+';btn.title='Maximize panel';
+    badge.style.display='inline-block';if(subtext)subtext.style.display='none';
     section.style.marginBottom='10px';
-    // Make banner clickable to re-expand
     document.querySelector('#principalSection .principal-banner').style.cursor='pointer';
     document.querySelector('#principalSection .principal-banner').onclick=function(e){
-      if(e.target===btn||btn.contains(e.target))return;
-      toggleAdminMinimize();
+      if(e.target===btn||btn.contains(e.target))return;toggleAdminMinimize();
     };
   }else{
-    body.classList.remove('minimized');
-    btn.textContent='−';
-    btn.title='Minimize panel';
-    badge.style.display='none';
-    if(subtext)subtext.style.display='';
+    body.classList.remove('minimized');btn.textContent='−';btn.title='Minimize panel';
+    badge.style.display='none';if(subtext)subtext.style.display='';
     section.style.marginBottom='';
     document.querySelector('#principalSection .principal-banner').style.cursor='default';
     document.querySelector('#principalSection .principal-banner').onclick=null;
@@ -979,7 +1020,6 @@ function showFlash(id,msg){
   setTimeout(()=>el.className='flash-ok',2800);
 }
 
-// ── ACCOUNTS TAB ──
 function renderAccountsTab(){
   const el=document.getElementById('accountsList');
   if(!el)return;
@@ -1009,7 +1049,6 @@ function renderAccountsTab(){
     </div>`;
   });
   html+=`</div>`;
-  // Add new account form
   html+=`<div class="section-divider" style="margin-top:18px"><span>➕ Add New Account</span></div>
   <div class="admin-card-wrap">
     <h3>➕ Add Teacher / Admin Account</h3>
@@ -1048,11 +1087,9 @@ function saveAccount(i){
   const gradesEl=document.getElementById(`ugrades_${i}`);
   const grades=role==='admin'?'all':[...gradesEl.selectedOptions].map(o=>o.value);
   if(!name||!username||!password){alert('Please fill in all fields.');return;}
-  // Check username uniqueness
   const duplicate=USERS.findIndex((u,idx)=>u.username===username&&idx!==i);
-  if(duplicate>=0){alert('Username already exists. Please choose a different one.');return;}
+  if(duplicate>=0){alert('Username already exists.');return;}
   USERS[i]={...USERS[i],name,username,password,role,grades};
-  // Update current user if editing self
   if(currentUser&&currentUser.username===USERS[i].username)currentUser=USERS[i];
   renderAdminPanel();renderGradeTabs();
   showFlash('accountsFlash','✅ Account updated successfully!');
@@ -1060,7 +1097,7 @@ function saveAccount(i){
 
 function deleteAccount(i){
   const u=USERS[i];
-  if(!confirm(`Remove account for "${u.name}" (@${u.username})? This cannot be undone.`))return;
+  if(!confirm(`Remove account for "${u.name}" (@${u.username})?`))return;
   USERS.splice(i,1);
   renderAdminPanel();renderGradeTabs();
   showFlash('accountsFlash','✅ Account removed.');
@@ -1080,18 +1117,13 @@ function addNewAccount(){
   showFlash('accountsFlash','✅ New account added!');
 }
 
-// ── STUDENTS TAB ──
 function renderStudentsTab(){
   const el=document.getElementById('studentsList');
   if(!el)return;
-  const grade=adminCurrentGrade;
-  const g=GRADES[grade];
+  const grade=adminCurrentGrade;const g=GRADES[grade];
   if(!g){el.innerHTML='<p style="color:var(--gray)">No grade selected.</p>';return;}
-  // Sync select
   const sel=document.getElementById('studentGradeSelect');
   if(sel)sel.value=grade;
-
-  // Collect actual students (no null separators shown, but we keep null logic)
   let html=`<div class="admin-card-wrap">
     <h3>👨‍🎓 Students in ${grade} <span style="font-weight:400;color:var(--gray);font-size:13px">(${g.students.filter(Boolean).length} students)</span></h3>
     <div class="table-wrap"><table class="student-table">
@@ -1099,8 +1131,7 @@ function renderStudentsTab(){
       <tbody>`;
   let rowIdx=0;
   g.students.forEach((s,si)=>{
-    if(!s)return;
-    rowIdx++;
+    if(!s)return;rowIdx++;
     html+=`<tr>
       <td>${rowIdx}</td>
       <td><input id="sidx_${si}" value="${s.index}" style="width:90px" /></td>
@@ -1109,10 +1140,8 @@ function renderStudentsTab(){
     </tr>`;
   });
   html+=`</tbody></table></div>
-  <button class="admin-save-btn" style="max-width:200px;margin-top:6px" onclick="saveAllStudents('${grade}')">💾 Save Student Changes</button>`;
-
-  // Add student row
-  html+=`<div class="section-divider"><span>➕ Add Student</span></div>
+  <button class="admin-save-btn" style="max-width:200px;margin-top:6px" onclick="saveAllStudents('${grade}')">💾 Save Student Changes</button>
+  <div class="section-divider"><span>➕ Add Student</span></div>
   <div class="add-student-row">
     <div><label>No.</label><input id="newSNo" placeholder="e.g. 27" style="width:70px" /></div>
     <div><label>Index No.</label><input id="newSIdx" placeholder="e.g. 7900" /></div>
@@ -1123,28 +1152,21 @@ function renderStudentsTab(){
 }
 
 function saveAllStudents(grade){
-  const g=GRADES[grade];
-  let rowIdx=0;
+  const g=GRADES[grade];let rowIdx=0;
   g.students.forEach((s,si)=>{
     if(!s)return;
     const idxEl=document.getElementById(`sidx_${si}`);
     const nameEl=document.getElementById(`sname_${si}`);
     if(idxEl&&nameEl){
-      const oldIdx=s.index;
-      const newIdx=idxEl.value.trim();
-      const newName=nameEl.value.trim();
-      // Migrate marks if index changed
+      const oldIdx=s.index;const newIdx=idxEl.value.trim();const newName=nameEl.value.trim();
       if(newIdx&&newIdx!==oldIdx&&marksData[grade]&&marksData[grade][oldIdx]){
-        marksData[grade][newIdx]=marksData[grade][oldIdx];
-        delete marksData[grade][oldIdx];
+        marksData[grade][newIdx]=marksData[grade][oldIdx];delete marksData[grade][oldIdx];
       }
-      s.index=newIdx||s.index;
-      s.name=newName||s.name;
+      s.index=newIdx||s.index;s.name=newName||s.name;
     }
     rowIdx++;s.no=rowIdx;
   });
-  renderStudentsTab();
-  showFlash('studentsFlash','✅ Student list updated!');
+  renderStudentsTab();showFlash('studentsFlash','✅ Student list updated!');
   if(currentGrade===grade)renderTable(grade);
 }
 
@@ -1153,11 +1175,8 @@ function deleteStudent(grade,si){
   if(!s)return;
   if(!confirm(`Remove student "${s.name}" (Index: ${s.index})?`))return;
   GRADES[grade].students.splice(si,1);
-  // Renumber
-  let no=0;
-  GRADES[grade].students.forEach(x=>{if(x)x.no=++no;});
-  renderStudentsTab();
-  showFlash('studentsFlash','✅ Student removed.');
+  let no=0;GRADES[grade].students.forEach(x=>{if(x)x.no=++no;});
+  renderStudentsTab();showFlash('studentsFlash','✅ Student removed.');
   if(currentGrade===grade)renderTable(grade);
 }
 
@@ -1167,27 +1186,22 @@ function addStudent(grade){
   const name=document.getElementById('newSName').value.trim();
   if(!idx||!name){alert('Please enter Index No. and Name.');return;}
   if(GRADES[grade].students.find(s=>s&&s.index===idx)){alert('Index number already exists in this grade.');return;}
-  const students=GRADES[grade].students.filter(Boolean);
-  const newNo=no?parseInt(no):students.length+1;
+  const newNo=no?parseInt(no):GRADES[grade].students.filter(Boolean).length+1;
   GRADES[grade].students.push({no:newNo,index:idx,name});
-  // Renumber
   let c=0;GRADES[grade].students.forEach(x=>{if(x)x.no=++c;});
-  renderStudentsTab();
-  showFlash('studentsFlash',`✅ ${name} added to ${grade}!`);
+  renderStudentsTab();showFlash('studentsFlash',`✅ ${name} added to ${grade}!`);
   if(currentGrade===grade)renderTable(grade);
 }
 
-// ── SUBJECTS & GRADES TAB ──
 function renderSubjectsTab(){
   const el=document.getElementById('subjectsList');
   if(!el)return;
-  const grade=adminCurrentGrade;
-  const g=GRADES[grade];
+  const grade=adminCurrentGrade;const g=GRADES[grade];
   const sel=document.getElementById('subjectGradeSelect');
   if(sel)sel.value=grade;
   if(!g){el.innerHTML='';return;}
   let chips=g.subjects.map((sub,si)=>`<span class="subject-chip">${sub}<button class="subject-chip-del" onclick="deleteSubject('${grade}',${si})" title="Remove">×</button></span>`).join('');
-  let html=`<div class="admin-card-wrap">
+  el.innerHTML=`<div class="admin-card-wrap">
     <h3>📚 Subjects for ${grade}</h3>
     <div class="subjects-wrap">${chips}</div>
     <div class="add-subject-row">
@@ -1197,36 +1211,31 @@ function renderSubjectsTab(){
     <div class="section-divider" style="margin-top:16px"><span>⚠️ Danger Zone</span></div>
     <button class="grade-del-btn" onclick="deleteGrade('${grade}')">🗑 Delete ${grade} Entirely</button>
   </div>`;
-  el.innerHTML=html;
 }
 
 function addSubject(grade){
-  const inp=document.getElementById('newSubjectInput');
-  const sub=inp.value.trim();
+  const inp=document.getElementById('newSubjectInput');const sub=inp.value.trim();
   if(!sub)return;
   if(GRADES[grade].subjects.includes(sub)){alert('Subject already exists.');return;}
   GRADES[grade].subjects.push(sub);
-  renderSubjectsTab();
-  showFlash('subjectsFlash',`✅ Subject "${sub}" added!`);
+  renderSubjectsTab();showFlash('subjectsFlash',`✅ Subject "${sub}" added!`);
   if(currentGrade===grade)renderTable(grade);
 }
 
 function deleteSubject(grade,si){
   const sub=GRADES[grade].subjects[si];
-  if(!confirm(`Remove subject "${sub}" from ${grade}? All marks for this subject will be lost.`))return;
+  if(!confirm(`Remove subject "${sub}" from ${grade}?`))return;
   GRADES[grade].subjects.splice(si,1);
-  renderSubjectsTab();
-  showFlash('subjectsFlash',`✅ Subject "${sub}" removed.`);
+  renderSubjectsTab();showFlash('subjectsFlash',`✅ Subject "${sub}" removed.`);
   if(currentGrade===grade)renderTable(grade);
 }
 
 function deleteGrade(grade){
-  if(!confirm(`⚠️ Delete "${grade}" entirely? This removes all students and marks for this grade. This cannot be undone.`))return;
+  if(!confirm(`⚠️ Delete "${grade}" entirely?`))return;
   delete GRADES[grade];
   const keys=Object.keys(GRADES);
   adminCurrentGrade=keys.length>0?keys[0]:'';
-  renderAdminPanel();
-  renderGradeTabs();
+  renderAdminPanel();renderGradeTabs();
   showFlash('subjectsFlash',`✅ ${grade} deleted.`);
 }
 
@@ -1238,15 +1247,13 @@ function addNewGrade(){
   const subjects=subsRaw?subsRaw.split(',').map(s=>s.trim()).filter(Boolean):['Religion','Tamil','English','Maths','Science','History'];
   GRADES[name]={subjects,students:[]};
   adminCurrentGrade=name;
-  renderAdminPanel();
-  renderGradeTabs();
+  renderAdminPanel();renderGradeTabs();
   showFlash('subjectsFlash',`✅ Grade "${name}" added!`);
 }
 
 function renderGradeTabs(){
   if(!currentUser)return;
-  const tabs=document.getElementById('gradeTabs');
-  tabs.innerHTML='';
+  const tabs=document.getElementById('gradeTabs');tabs.innerHTML='';
   const accessible=Object.keys(GRADES).filter(g=>canAccess(g));
   accessible.forEach(g=>{
     const btn=document.createElement('button');
